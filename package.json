@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "bible-passage-reference-parser": "^2.0.1",
+    "fs-extra": "^4.0.1",
+    "himalaya": "^0.2.10",
     "reversify": "^1.1.0"
   }
 }
