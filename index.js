@@ -1,9 +1,8 @@
 'use strict'
 
-const deepCopyTagRefs = require('./deep-copy-tag-refs');
+const deepCopyTagRefs = require('./lib/deep-copy-tag-refs');
 const fs = require('fs-extra');
-const { toJSON, toXHTML } = require('./himalaya-io');
-const path = require('path');
+const { toJSON, toXHTML } = require('./lib/himalaya-io');
 const PouchDB = require('pouchdb');
 
 process.on('unhandledRejection', (err) => {
@@ -18,14 +17,16 @@ const main = (path_or_html, db, doc, opts = {vers: 'default', lang: 'en'}) => {
     toJSON(path_or_html);
 
   // first run through parser, tagging explicit refs only
-  const { tagged, data } = deepCopyTagRefs(json, 'explicit');
+  const { tagged, data } = deepCopyTagRefs(json, 'explicit', opts);
 
   // update db with data
-  promises.push(updateDoc(db, doc._id, [
-    { key: 'begin', val: json },
-    { key: 'explicit', val: tagged },
-    { key: 'explicit_data', val: data }
-  ]));
+  if (db) {
+    promises.push(updateDoc(db, doc._id, [
+      { key: 'begin', val: json },
+      { key: 'explicit', val: tagged },
+      { key: 'explicit_data', val: data }
+    ]));
+  }
 
   return toXHTML(tagged);
 
