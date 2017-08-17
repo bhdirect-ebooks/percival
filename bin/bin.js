@@ -95,25 +95,27 @@ const parseEpubContent = async (cwd) => {
       total: files.length
     });
 
-    files.forEach(async file => {
-      let output;
+    const promises = files.map(file => {
       const doc = {
         _id: file.toLowerCase().replace('.xhtml', ''),
         name: file
       }
-      const res = await db.put(doc);
-
-      if (res.ok) {
-        output = await main(path.resolve(cwd, file), db, doc, opts);
-      } else {
-        output = await main(path.resolve(cwd, file), opts);
-      }
-
-      fs.writeFileSync(path.resolve(cwd, file), output);
-      bar.tick();
+      return db.put(doc)
+        .then(res => {
+          return (res.ok) ? main(path.resolve(text_dir, file), db, doc, opts) :
+            main(path.resolve(text_dir, file), opts);
+        })
+        .then(output => {
+          return fs.writeFile(path.resolve(cwd, file), output);
+        })
+        .then(() => {
+          bar.tick();
+        });
     });
+
+    Promise.all(promises).then(() => { console.log('Done') });
   } else {
-    throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.');
+    throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.')
   }
 };
 
