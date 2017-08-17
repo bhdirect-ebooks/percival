@@ -4,34 +4,66 @@
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
+const path = require('path')
+//const ProgressBar = require('progress')
+/*const PouchDB = require('pouchdb')
+let PromiseBar = require("promise.bar")
+PromiseBar.enable()
+PromiseBar.conf.flat = false
 
 process.on('unhandledRejection', (err) => {
   console.log(err)
-})
+})*/
 
-const main = async (filepath, db, doc, opts = {vers: 'default', lang: 'en'}) => {
-  let promises = []
+const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
 
-  const initial_html = await fs.readFile(filepath, {encoding: 'utf8'})
+  /* initialize db
+  const db_name = `META-INF/percival-${new Date().toISOString()}`
+  const db = new PouchDB(db_name);
+  const init_db = files.map(file => {
+    return db.put({
+      _id: file.toLowerCase().replace('.xhtml', ''),
+      name: file
+    })
+  })*/
 
-  const json = toJSON(initial_html)
+  // begin file processing
+  //const db_update = files.map((file, i) => {
+  const file_data = files.map(file => {
+    const _id = file.toLowerCase().replace('.xhtml', '')
+    // get explicit parse data and tagged content
+    const json = toJSON(fs.readFileSync(path.join(text_dir, file), {encoding: 'utf8'}));
+    const { tagged, data } = deepCopyTagRefs(json, 'explicit', opts)
+    //return init_db[i].then(res => {
+      //return updateDoc(db, res._id, [
+    return {
+      _id : _id,
+      explicit: {
+        before: json,
+        tagged: tagged,
+        parse_data: data,
+        html: toXHTML(tagged)
+      }
+    }
+    //})
+  })
 
-  // first run through parser, tagging explicit refs only
-  const { tagged, data } = deepCopyTagRefs(json, 'explicit', opts)
+  //PromiseBar.all(db_update, {label: "Parsing Explicit Refs"})
+  //const write_arr = files.map((file, i) => {
+    //return db_update[i].then(res => {
+  console.log('Writing New Files')
+  file_data.forEach((data, i) => {
+    fs.outputFileSync(path.join(text_dir, 'test', files[i]), data.explicit.html)
+    //})
+  })
 
-  // update db with data
-  if (db) {
-    promises.push(updateDoc(db, doc._id, [
-      { key: 'begin', val: json },
-      { key: 'explicit', val: tagged },
-      { key: 'explicit_data', val: data }
-    ]))
-  }
+  /*PromiseBar.all(write_arr, {label: "Writing New Files"})
+    .then(() => { return 'Done!'})*/
 
-  return Promise.all(promises).then(() => { return toXHTML(tagged) })
+  return fs.writeJson(`/Users/wlittre/Desktop/9781433651205 copy/META-INF/percival-${new Date().toISOString()}.json`, file_data)
 }
 
-const updateDoc = (db, doc_id, data_arr) => {
+/*const updateDoc = (db, doc_id, data_arr) => {
   return db.get(doc_id)
     .then(doc => {
       data_arr.forEach(obj => {
@@ -39,6 +71,8 @@ const updateDoc = (db, doc_id, data_arr) => {
       })
       return db.put(doc)
     })
-};
+};*/
 
-module.exports = main
+main('/Users/wlittre/Desktop/9781433651205 copy/OEBPS/text', ['02_body02_chapter01.xhtml', '02_body03_chapter02.xhtml'])
+
+module.exports = main;
