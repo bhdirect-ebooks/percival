@@ -18,9 +18,12 @@
   },
   "dependencies": {
     "bible-passage-reference-parser": "^2.0.1",
+    "epub-check": "^0.2.0",
     "fs-extra": "^4.0.1",
     "himalaya": "^0.2.10",
+    "inquirer": "^3.2.1",
     "pouchdb": "^6.3.4",
+    "progress": "^2.0.0",
     "recursive-iterator": "^3.3.0",
     "reversify": "^1.1.0",
     "simple-git": "^1.75.0"

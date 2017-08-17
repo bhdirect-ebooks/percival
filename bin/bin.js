@@ -16,42 +16,34 @@ process.on('unhandledRejection', (err) => {
 });
 
 const cmd_cnt = process.argv.length;
-const validate_markup = !process.argv.includes('-s');
-const path_provided = (validate_markup) ? (cmd_cnt > 3) : (cmd_cnt > 2);
+const skip_validate = process.argv.includes('-s');
+const path_provided = (skip_validate) ? (cmd_cnt > 3) : (cmd_cnt > 2);
 
-if (path_provided) {
-  const file_path = process.argv.map((arg, i) => {
-    return (i > 1 && !i.includes('-s')) ? arg : '';
-  });
-  parseFile(file_path.join(''));
-} else {
-  initEpubParse(process.cwd, validate_markup);
-}
-
-const parseFile = (file_path) => {
+const parseFile = async (file_path) => {
   if (fs.existsSync(file_path) && fs.lstatSync(file_path).isFile() && file_path.endsWith('.xhtml')) {
-    const opts = setOpts(setPrompts());
+    const opts = await setOpts(setPrompts());
     console.log(`Parsing Bible references in 1 file...`);
     const cwd = path.dirname(file_path);
     const file = path.basename(file_path);
     const output = main(fs.readFileSync(file_path), opts);
     //fs.writeFileSync(path.resolve(cwd, file), output);
     //handleOutput(output);
+    console.log('\nAll done!');
   } else {
     throw new Error('File not found or not XHTML. Try again.');
   }
-}
+};
 
-const initEpubParse = (cwd, validate) => {
-  if (!validate) {
+const initEpubParse = (cwd, skip_validate) => {
+  if (skip_validate) {
     console.log(`Skipped EpubCheck`);
     parseEpubContent(cwd);
   } else {
     console.log(`Checking EPUB validity...`);
-    epubCheck(epub_dir).then(data => {
+    epubCheck(cwd).then(data => {
       if (data.pass) {
         console.log(`✔ Valid EPUB`);
-        parseEpubContent(epub_dir);
+        parseEpubContent(cwd);
       } else {
         let err_msg = '✘ This EPUB is not valid. Fix errors and try again.\n';
         data.messages.forEach(msg => {
@@ -61,23 +53,13 @@ const initEpubParse = (cwd, validate) => {
       }
     }).catch(err => {console.error(err);});
   }
-}
+};
 
-const parseEpubContent = (cwd) => {
+const parseEpubContent = async (cwd) => {
   const text_dir = path.join(cwd, 'OEBPS/text');
   const rc_loc = path.join(cwd, 'META-INF/crossrc.json');
 
-  const crossrc = (fs.existsSync(rc_loc)) ?
-    JSON.parse(fs.readFileSync(rc_loc, {encoding: 'utf8'})) : {};
-
-  const opts = setOpts(setPrompts(crossrc), crossrc);
-
-  if (crossrc !== {} && !crossrc.titleProps.versification) {
-    crossrc.titleProps.versification = vers;
-    fs.writeJson(rc_loc, crossrc, {spaces: 2});
-  }
-
-  if (existsSync(text_dir)) {
+  if (fs.existsSync(text_dir)) {
     const files = fs.readdirSync(text_dir)
       .filter(thing => { return fs.lstatSync(path.join(text_dir, thing)).isFile() })
       .filter(file => { return file.endsWith('.xhtml') })
@@ -88,45 +70,52 @@ const parseEpubContent = (cwd) => {
 
     if (files.length === 0) throw new Error('No XHTML files found in the `OEBPS/text` directory.');
 
-    const db_name = `percival-${(crossrc.crossProps.volShortName) ?
+    const crossrc = (fs.existsSync(rc_loc)) ? JSON.parse(fs.readFileSync(rc_loc, {encoding: 'utf8'})) : {};
+
+    const opts = await setOpts(setPrompts(crossrc), crossrc);
+
+    if (crossrc.hasOwnProperty('titleProps') && !crossrc.titleProps.versification) {
+      crossrc.titleProps.versification = vers;
+      fs.writeJson(rc_loc, crossrc, {spaces: 2});
+    }
+
+    const db_name = `percival-${(crossrc.hasOwnProperty('crossProps')) ?
       crossrc.crossProps.volShortName.toLowerCase() : new Date().toISOString()}`
 
     const db = new PouchDB(db_name);
 
-    if (files.length === 1) console.log('Parsing Bible references in 1 file...');
+    if (files.length === 1) console.log('\nParsing Bible references in 1 file...');
 
-    if (files.length > 1) console.log(`Parsing Bible references in ${files.length} files...`);
+    if (files.length > 1) console.log(`\nParsing Bible references in ${files.length} files...`);
 
-    const bar = new ProgressBar('    Progress: [:bar] :rate/bps :percent', {
+    const bar = new ProgressBar('\n    Progress: [:bar] :rate/bps :percent', {
       complete: '=',
       incomplete: ' ',
       width: 20,
       total: files.length
     });
 
-    let promises = [];
-
-    files.forEach(file => {
+    files.forEach(async file => {
+      let output;
       const doc = {
         _id: file.toLowerCase().replace('.xhtml', ''),
         name: file
       }
-      db.put(doc).then(res => {
-        let output;
-        if (res.ok) {
-          output = main(path.resolve(cwd, file), db, doc, opts);
-        } else {
-          output = main(path.resolve(cwd, file), opts);
-        }
-        //fs.writeFileSync(path.resolve(cwd, file), output);
-        //handleOutput(output);
-        bar.tick();
-      });
+      const res = await db.put(doc);
+
+      if (res.ok) {
+        output = await main(path.resolve(cwd, file), db, doc, opts);
+      } else {
+        output = await main(path.resolve(cwd, file), opts);
+      }
+
+      fs.writeFileSync(path.resolve(cwd, file), output);
+      bar.tick();
     });
   } else {
     throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.');
   }
-}
+};
 
 const setPrompts = (crossrc = {}) => {
   let prompts;
@@ -154,18 +143,16 @@ const setPrompts = (crossrc = {}) => {
     default: 0
   };
 
-  if (crossrc !== {}) {
-    prompts = (crossrc.titleProps.versification) ?
-      prompts = [] :
-      prompts = [trans_prompt];
+  if (crossrc.hasOwnProperty('titleProps')) {
+    prompts = (crossrc.titleProps.hasOwnProperty('versification')) ? [] : [trans_prompt];
   } else {
     prompts = [trans_prompt, lang_prompt];
   }
   return prompts;
-}
+};
 
-const setOpts = (response, crossrc) => {
-  function getVersification(translation) {
+const setOpts = (prompts, crossrc) => {
+  const getVersification = (translation) => {
     switch (translation) {
       case 'CSB/HCSB, ESV, AMP, NASB, etc.':
         return 'default';
@@ -184,9 +171,9 @@ const setOpts = (response, crossrc) => {
       default:
         return 'default';
     }
-  }
+  };
 
-  function getLang(language) {
+  const getLang = (language) => {
     switch (language) {
       case 'English':
         return 'en';
@@ -197,9 +184,9 @@ const setOpts = (response, crossrc) => {
       default:
         return 'en';
     }
-  }
+  };
 
-  inquirer.prompt(prompts)
+  return inquirer.prompt(prompts)
     .then(response => {
       const vers = (response.translation) ?
         getVersification(response.translation) :
@@ -213,4 +200,11 @@ const setOpts = (response, crossrc) => {
     });
 }
 
-console.log('\nAll done!');
+if (path_provided) {
+  const file_path = process.argv.map((arg, i) => {
+    return (i > 1 && !arg.includes('-s')) ? arg : '';
+  });
+  parseFile(file_path.join(''));
+} else {
+  initEpubParse(process.cwd(), skip_validate);
+}
