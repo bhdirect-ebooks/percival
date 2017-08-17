@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
+const epubCheck = require('epub-check');
 const fs = require('fs-extra');
+const inquirer = require('inquirer');
 const main = require('../index.js');
 const path = require('path');
-const inquirer = require('inquirer');
+const PouchDB = require('pouchdb');
 const ProgressBar = require('progress');
-const epubCheck = require('epub-check');
+
 //const handleOutput = require('../lib/handle-output');
 
 process.on('unhandledRejection', (err) => {
@@ -61,7 +63,7 @@ const initEpubParse = (cwd, validate) => {
   }
 }
 
-const parseEpubContent = (cwd, crossrc, opts) => {
+const parseEpubContent = (cwd) => {
   const text_dir = path.join(cwd, 'OEBPS/text');
   const rc_loc = path.join(cwd, 'META-INF/crossrc.json');
 
@@ -86,6 +88,11 @@ const parseEpubContent = (cwd, crossrc, opts) => {
 
     if (files.length === 0) throw new Error('No XHTML files found in the `OEBPS/text` directory.');
 
+    const db_name = `percival-${(crossrc.crossProps.volShortName) ?
+      crossrc.crossProps.volShortName.toLowerCase() : new Date().toISOString()}`
+
+    const db = new PouchDB(db_name);
+
     if (files.length === 1) console.log('Parsing Bible references in 1 file...');
 
     if (files.length > 1) console.log(`Parsing Bible references in ${files.length} files...`);
@@ -97,11 +104,24 @@ const parseEpubContent = (cwd, crossrc, opts) => {
       total: files.length
     });
 
+    let promises = [];
+
     files.forEach(file => {
-      const output = main(path.resolve(cwd, file), opts);
-      //fs.writeFileSync(path.resolve(cwd, file), output);
-      //handleOutput(output);
-      bar.tick();
+      const doc = {
+        _id: file.toLowerCase().replace('.xhtml', ''),
+        name: file
+      }
+      db.put(doc).then(res => {
+        let output;
+        if (res.ok) {
+          output = main(path.resolve(cwd, file), db, doc, opts);
+        } else {
+          output = main(path.resolve(cwd, file), opts);
+        }
+        //fs.writeFileSync(path.resolve(cwd, file), output);
+        //handleOutput(output);
+        bar.tick();
+      });
     });
   } else {
     throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.');
