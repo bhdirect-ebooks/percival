@@ -116,11 +116,11 @@ const parseEpubContent = (cwd) => {
           fs.writeJson(rc_loc, crossrc, {spaces: 2});
         }
 
-        if (files.length === 1) console.log('\nParsing Bible references in 1 file...');
-        if (files.length > 1) console.log(`\nParsing Bible references in ${files.length} files...`);
+        if (files.length === 1) console.log('\nParsing Bible references in 1 file...\n');
+        if (files.length > 1) console.log(`\nParsing Bible references in ${files.length} files...\n`);
 
         main(text_dir, files, {vers: vers, lang: lang})
-          .then(() => { console.log('Done'); })
+          .then(() => { console.log('\n\nDone') })
       })
   } else {
     throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.')
@@ -128,13 +128,13 @@ const parseEpubContent = (cwd) => {
 };
 
 if (skip_validate) {
-  console.log(`Skipped EpubCheck`);
+  console.log(`👨🏼‍💻 skipping EpubCheck\n`);
   parseEpubContent(cwd);
 } else {
   console.log(`Checking EPUB validity...`);
   epubCheck(cwd).then(data => {
     if (data.pass) {
-      console.log(`✔ Valid EPUB`);
+      console.log(`✔ Valid EPUB\n`);
       parseEpubContent(cwd);
     } else {
       let err_msg = '✘ This EPUB is not valid. Fix errors and try again.\n';

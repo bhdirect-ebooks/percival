@@ -1,7 +1,7 @@
 'use strict'
 
 const test = require('ava');
-const parseExplicit = require('../lib/parse-explicit.js');
+const { parseExplicit, parseWithContext } = require('../lib/parse.js');
 
 test('parse-explicit exists', t => {
   t.pass(true);

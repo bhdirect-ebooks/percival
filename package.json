@@ -23,11 +23,8 @@
     "himalaya": "^0.2.10",
     "inquirer": "^3.2.1",
     "lodash.get": "^4.4.2",
-    "pouchdb": "^6.3.4",
-    "progress": "^2.0.0",
-    "promise.bar": "^0.1.4",
     "recursive-iterator": "^3.3.0",
     "reversify": "^1.1.0",
-    "simple-git": "^1.75.0"
+    "single-line-log": "^1.1.2"
   }
 }
