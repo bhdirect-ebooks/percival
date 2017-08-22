@@ -120,7 +120,7 @@ const parseEpubContent = (cwd) => {
         if (files.length > 1) console.log(`\nParsing Bible references in ${files.length} files...\n`);
 
         main(text_dir, files, {vers: vers, lang: lang})
-          .then(() => { console.log('\n\nDone') })
+          .then(() => { console.log('\nDone!') })
       })
   } else {
     throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.')
