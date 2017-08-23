@@ -34,7 +34,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
 
   // get any missed local orphans
   data = data.map(file_data => {
-    log(' - Tagging nearby orphaned refs: ' + file_data.name)
+    log(' - Tagging nearby orphans (nearby context): ' + file_data.name)
     const { data, html } = tagLocal(file_data.final_html, opts)
 
     if (data.length > 0) {
@@ -45,18 +45,35 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
       file_data.final_html = html
     }
 
+    return file_data
+  })
+  log('')
+  console.log(' ✔︎ Tagged local orphans (nearby context)')
+
+  // tag remaining orphans using provided context
+  data = data.map(file_data => {
+    log(' - Tagging remaining orphans (using context tags): ' + file_data.name)
+    const json = toJSON(file_data.final_html);
+    const { tagged, data } = deepCopyTagRefs(json, 'context', opts, log, file_data.name)
+    const html = toXHTML(tagged)
+
+    if (data.length > 0) {
+      file_data.with_context = {
+        parse_data: data,
+        html: html
+      }
+      file_data.final_html = html
+    }
+
     log.clear()
     return file_data
   })
   log('')
-  console.log(' ✔︎ Tagged local orphans')
+  console.log(' ✔︎ Tagged remaining orphans (given context)')
 
-  log('Saving files...')
   data.forEach(file_data => {
     fs.outputFileSync(path.join(text_dir, 'test', file_data.name), file_data.final_html)
   })
-  log('')
-  console.log(' ✔︎ New files saved')
 
   return fs.outputJson(path.join(text_dir, `test/.percival/data-${new Date().toISOString()}.json`), data, {space: 2})
 }
