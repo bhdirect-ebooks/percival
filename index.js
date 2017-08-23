@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-'use strict'
-
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
@@ -9,8 +6,8 @@ const path = require('path')
 const tagLocal = require('./lib/tag-local-orphans')
 
 const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
-   // get explicit parse data and tagged content
-  let data = files.map(file => {
+  // get explicit parse data and tagged content
+  let all_data = files.map(file => {
     log(' - Tagging explicit refs: ' + file)
     const json = toJSON(fs.readFileSync(path.join(text_dir, file), {encoding: 'utf8'}));
     const { tagged, data } = deepCopyTagRefs(json, 'explicit', opts, log, file)
@@ -22,7 +19,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
       name: file,
       explicit: {
         parse_data: data,
-        html: html
+        html
       },
       nearby: {},
       with_context: {},
@@ -33,14 +30,14 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
   console.log(' ✔︎ Tagged explicit refs')
 
   // get any missed local orphans
-  data = data.map(file_data => {
+  all_data = all_data.map(file_data => {
     log(' - Tagging nearby orphans (nearby context): ' + file_data.name)
     const { data, html } = tagLocal(file_data.final_html, opts)
 
     if (data.length > 0) {
       file_data.nearby = {
         parse_data: data,
-        html: html
+        html
       }
       file_data.final_html = html
     }
@@ -51,7 +48,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
   console.log(' ✔︎ Tagged local orphans (nearby context)')
 
   // tag remaining orphans using provided context
-  data = data.map(file_data => {
+  all_data = all_data.map(file_data => {
     log(' - Tagging remaining orphans (using context tags): ' + file_data.name)
     const json = toJSON(file_data.final_html);
     const { tagged, data } = deepCopyTagRefs(json, 'context', opts, log, file_data.name)
@@ -60,7 +57,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
     if (data.length > 0) {
       file_data.with_context = {
         parse_data: data,
-        html: html
+        html
       }
       file_data.final_html = html
     }
@@ -71,11 +68,11 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
   log('')
   console.log(' ✔︎ Tagged remaining orphans (given context)')
 
-  data.forEach(file_data => {
+  all_data.forEach(file_data => {
     fs.outputFileSync(path.join(text_dir, 'test', file_data.name), file_data.final_html)
   })
 
-  return fs.outputJson(path.join(text_dir, `test/.percival/data-${new Date().toISOString()}.json`), data, {space: 2})
+  return fs.outputJson(path.join(text_dir, `test/.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2})
 }
 
 module.exports = main;
