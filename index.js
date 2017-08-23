@@ -21,8 +21,6 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
       id: file.toLowerCase().replace('.xhtml', ''),
       name: file,
       explicit: {
-        before: json,
-        tagged: tagged,
         parse_data: data,
         html: html
       },
