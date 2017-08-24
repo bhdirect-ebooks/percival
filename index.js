@@ -50,12 +50,12 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
 
   // write html back to disk
   all_data.forEach(file_data => {
-    fs.outputFileSync(path.join(text_dir, 'test', file_data.name), file_data.final_html)
+    fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html)
   })
 
   // write data to disk
   if (save_data) {
-    return fs.outputJson(path.join(text_dir, `test/.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2})
+    return fs.outputJson(path.join(text_dir, `.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2})
   } else {
     return Promise.resolve()
   }

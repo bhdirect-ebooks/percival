@@ -6,6 +6,7 @@ const inquirer = require('inquirer')
 const main = require('../index.js')
 const path = require('path')
 
+/* eslint brace-style: 0 */
 
 process.on('unhandledRejection', (err) => {
   console.log(err)
@@ -97,7 +98,7 @@ const parseEpubContent = (dir, save_data) => {
       .filter(file => { return !file.includes('copyright') && !file.includes('cover') && !file.includes('titlepage')})
 
     if (files.length === 0) throw new Error('No qualifying XHTML file found in the `OEBPS/text` directory.')
-    if (save_data) console.log(`\nData save/inspect mode 🔎`)
+    if (save_data) console.log(`Data save/inspect mode 🔎`)
 
     const crossrc = fs.existsSync(rc_loc) ? JSON.parse(fs.readFileSync(rc_loc, {encoding: 'utf8'})) : {}
 
