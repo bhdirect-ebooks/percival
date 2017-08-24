@@ -17,10 +17,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
     return {
       id: file.toLowerCase().replace('.xhtml', ''),
       name: file,
-      explicit: {
-        parse_data: data,
-        html
-      },
+      explicit: data,
       nearby: {},
       with_context: {},
       final_html: html
@@ -35,10 +32,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
     const { data, html } = tagLocal(file_data.final_html, opts)
 
     if (data.length > 0) {
-      file_data.nearby = {
-        parse_data: data,
-        html
-      }
+      file_data.nearby = data
       file_data.final_html = html
     }
 
@@ -55,10 +49,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
     const html = toXHTML(tagged)
 
     if (data.length > 0) {
-      file_data.with_context = {
-        parse_data: data,
-        html
-      }
+      file_data.with_context = data
       file_data.final_html = html
     }
 

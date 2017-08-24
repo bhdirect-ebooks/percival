@@ -95,7 +95,7 @@ const parseEpubContent = (dir) => {
       .filter(file => { return !file.includes('footnotes') })
       .filter(file => { return !file.includes('copyright') && !file.includes('cover') && !file.includes('titlepage')})
 
-    if (files.length === 0) throw new Error('No XHTML files found in the `OEBPS/text` directory.')
+    if (files.length === 0) throw new Error('No qualifying XHTML file found in the `OEBPS/text` directory.')
 
     const crossrc = fs.existsSync(rc_loc) ? JSON.parse(fs.readFileSync(rc_loc, {encoding: 'utf8'})) : {}
 
@@ -114,8 +114,8 @@ const parseEpubContent = (dir) => {
           fs.writeJson(rc_loc, crossrc, {spaces: 2})
         }
 
-        if (files.length === 1) console.log('\nParsing Bible references in 1 file...\n')
-        if (files.length > 1) console.log(`\nParsing Bible references in ${files.length} files...\n`)
+        if (files.length === 1) console.log('\nFinding Bible references in 1 text file...\n')
+        if (files.length > 1) console.log(`\nFinding Bible references in ${files.length} text files...\n`)
 
         main(text_dir, files, { vers, lang })
           .then(() => { console.log('\nDone!') })
