@@ -5,8 +5,8 @@ const log = require('single-line-log').stdout
 const path = require('path')
 const tagLocal = require('./lib/tag-local-orphans')
 
-const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
-  // get explicit parse data and tagged content
+const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data = false) => {
+  // tag explicit refs and initialize data object
   let all_data = files.map(file => {
     log(' - Tagging explicit refs: ' + file)
     const { tagged, data } = deepCopyTagRefs(toJSON(fs.readFileSync(path.join(text_dir, file), {encoding: 'utf8'})), 'explicit', opts, log, file)
@@ -54,7 +54,11 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}) => {
   })
 
   // write data to disk
-  return fs.outputJson(path.join(text_dir, `test/.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2})
+  if (save_data) {
+    return fs.outputJson(path.join(text_dir, `test/.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2})
+  } else {
+    return Promise.resolve()
+  }
 }
 
 module.exports = main

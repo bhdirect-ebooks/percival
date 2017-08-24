@@ -13,6 +13,7 @@ process.on('unhandledRejection', (err) => {
 
 const cwd = process.cwd()
 const skip_validate = process.argv.includes('-s')
+const data_save_mode = process.argv.includes('-d')
 
 const setPrompts = (crossrc = {}) => {
   let prompts
@@ -82,7 +83,7 @@ const getLang = (language) => {
   }
 }
 
-const parseEpubContent = (dir) => {
+const parseEpubContent = (dir, save_data) => {
   const text_dir = path.join(dir, 'OEBPS/text')
   const rc_loc = path.join(dir, 'META-INF/crossrc.json')
 
@@ -96,6 +97,7 @@ const parseEpubContent = (dir) => {
       .filter(file => { return !file.includes('copyright') && !file.includes('cover') && !file.includes('titlepage')})
 
     if (files.length === 0) throw new Error('No qualifying XHTML file found in the `OEBPS/text` directory.')
+    if (save_data) console.log(`\nData save/inspect mode 🔎`)
 
     const crossrc = fs.existsSync(rc_loc) ? JSON.parse(fs.readFileSync(rc_loc, {encoding: 'utf8'})) : {}
 
@@ -117,7 +119,7 @@ const parseEpubContent = (dir) => {
         if (files.length === 1) console.log('\nFinding Bible references in 1 text file...\n')
         if (files.length > 1) console.log(`\nFinding Bible references in ${files.length} text files...\n`)
 
-        main(text_dir, files, { vers, lang })
+        main(text_dir, files, { vers, lang }, save_data)
           .then(() => { console.log('\nDone!') })
       })
   } else {
@@ -126,14 +128,14 @@ const parseEpubContent = (dir) => {
 }
 
 if (skip_validate) {
-  console.log(` 👨🏼‍💻 skipping EpubCheck\n`)
-  parseEpubContent(cwd)
+  console.log(`Skipping EpubCheck 🤗`)
+  parseEpubContent(cwd, data_save_mode)
 } else {
   console.log(`Checking EPUB validity...`)
   epubCheck(cwd).then(data => {
     if (data.pass) {
       console.log(`✔ Valid EPUB\n`)
-      parseEpubContent(cwd)
+      parseEpubContent(cwd, data_save_mode)
     } else {
       let err_msg = '✘ This EPUB is not valid. Fix errors and try again.\n'
       data.messages.forEach(msg => {
