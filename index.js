@@ -1,6 +1,7 @@
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
+const identifyAlternatives = require('./lib/id-alternatives')
 const log = require('single-line-log').stdout
 const path = require('path')
 const tagLocal = require('./lib/tag-local-orphans')
@@ -47,6 +48,18 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
   })
   log('')
   console.log(' ✔︎ Tagged orphaned refs')
+
+  // id and tag all possible ref alternatives
+  all_data = all_data.map(file_data => {
+    log(' - Identifying alternative refs: ' + file_data.name)
+
+    file_data.final_html = identifyAlternatives(file_data.final_html, opts)
+
+    log.clear()
+    return file_data
+  })
+  log('')
+  console.log(' ✔︎ Identified alternative refs')
 
   // write html back to disk
   all_data.forEach(file_data => {
