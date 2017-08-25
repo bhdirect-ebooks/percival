@@ -1,12 +1,12 @@
 {
   "name": "@bhdirect/percival",
   "version": "0.0.1",
-  "description": "top secret",
+  "description": "Next gen ref tagger for B&H Direct EPUBs",
   "main": "index.js",
   "repository": "github.com/bhdirect/percival",
   "author": "Weston Littrell",
   "bin": {
-    "percival": "./bin/bin.js"
+    "tag-refs": "./bin/bin.js"
   },
   "license": "MIT",
   "scripts": {
