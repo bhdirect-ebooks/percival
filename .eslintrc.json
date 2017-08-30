@@ -15,8 +15,8 @@
     "rules": {
         ////////// Possible Errors //////////
 
-        "for-direction": 1, // enforce “for” loop update clause moving the counter in the right direction
-        "getter-return": 1, // enforce return statements in getters
+        //"for-direction": 1, // enforce “for” loop update clause moving the counter in the right direction
+        //"getter-return": 1, // enforce return statements in getters
         "no-await-in-loop": 0, // disallow await inside of loops
         "no-compare-neg-zero": 2, // disallow comparing against -0
         "no-cond-assign": 0, // disallow assignment in conditional expressions
@@ -149,7 +149,7 @@
         "callback-return": 2, // require return statements after callbacks
         "global-require": 2, // require require() calls to be placed at top-level module scope
         "handle-callback-err": 0, // enforces error handling in callbacks
-        "no-buffer-constructor": 2, // disallow use of the Buffer() constructor
+        //"no-buffer-constructor": 2, // disallow use of the Buffer() constructor
         "no-mixed-requires": 2, // disallow require calls to be mixed with regular variable declarations
         "no-new-require": 2, // disallow new operators with calls to require
         "no-path-concat": 0, // disallow string concatenation with __dirname and __filename
