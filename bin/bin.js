@@ -90,12 +90,9 @@ const parseEpubContent = (dir, save_data) => {
 
   if (fs.existsSync(text_dir)) {
     const files = fs.readdirSync(text_dir)
-      .filter(thing => { return fs.lstatSync(path.join(text_dir, thing)).isFile() })
-      .filter(file => { return file.endsWith('.xhtml') })
-      .filter(file => { return !file.includes('index') })
-      .filter(file => { return !file.includes('bibliography') })
-      .filter(file => { return !file.includes('footnotes') })
-      .filter(file => { return !file.includes('copyright') && !file.includes('cover') && !file.includes('titlepage')})
+      .filter(thing => fs.lstatSync(path.join(text_dir, thing)).isFile())
+      .filter(file => file.endsWith('.xhtml'))
+      .filter(file => !/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(file))
 
     if (files.length === 0) throw new Error('No qualifying XHTML file found in the `OEBPS/text` directory.')
     if (save_data) console.log(`Data save/inspect mode 🔎`)
