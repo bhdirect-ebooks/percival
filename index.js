@@ -24,9 +24,33 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     }
   })
   log('')
-  console.log(' ✔︎ Tagged explicit refs')
+  console.log(chalk.green(' ✔︎ ') + 'Tagged explicit refs')
 
-  // locate and tag all orphans
+  // tag parenthetical orphans
+  all_data = all_data.map(file_data => {
+    log(' - Tagging parenthetical orphans: ' + file_data.name)
+
+   /* const local = tagLocal(file_data.final_html, opts)
+
+    if (local.data.length > 0) {
+      file_data.nearby = local.data
+      file_data.final_html = local.html
+    }
+
+    const remote = deepCopyTagRefs(toJSON(file_data.final_html), 'context', opts, log, file_data.name)
+
+    if (remote.data.length > 0) {
+      file_data.with_context = remote.data
+      file_data.final_html = toXHTML(remote.tagged)
+    }*/
+
+    log.clear()
+    return file_data
+  })
+  log('')
+  console.log(chalk.green(' ✔︎ ') + 'Tagged parenthetical orphans')
+
+  // locate and tag remaining orphans
   all_data = all_data.map(file_data => {
     log(' - Tagging remaining orphans: ' + file_data.name)
 
@@ -48,7 +72,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     return file_data
   })
   log('')
-  console.log(' ✔︎ Tagged remaining orphans')
+  console.log(chalk.green(' ✔︎ ') + 'Tagged remaining orphans')
 
   // id and tag all possible ref alternatives
   all_data = all_data.map(file_data => {
@@ -60,7 +84,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     return file_data
   })
   log('')
-  console.log(' ✔︎ Identified alternative refs')
+  console.log(chalk.green(' ✔︎ ') + 'Identified alternative refs')
 
   // write html back to disk
   all_data.forEach(file_data => {
