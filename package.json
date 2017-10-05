@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "bible-passage-reference-parser": "^2.0.1",
+    "chalk": "^2.1.0",
     "epub-check": "^0.2.0",
     "fs-extra": "^4.0.1",
     "he": "^1.1.1",

@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
@@ -27,7 +28,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
 
   // locate and tag all orphans
   all_data = all_data.map(file_data => {
-    log(' - Tagging orphaned refs: ' + file_data.name)
+    log(' - Tagging remaining orphans: ' + file_data.name)
 
     const local = tagLocal(file_data.final_html, opts)
 
@@ -47,7 +48,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     return file_data
   })
   log('')
-  console.log(' ✔︎ Tagged orphaned refs')
+  console.log(' ✔︎ Tagged remaining orphans')
 
   // id and tag all possible ref alternatives
   all_data = all_data.map(file_data => {
