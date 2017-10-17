@@ -2,7 +2,6 @@ const chalk = require('chalk')
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
-const getReportData = require('./lib/get-report-data')
 const identifyAlternatives = require('./lib/id-alternatives')
 const log = require('single-line-log').stdout
 const path = require('path')
@@ -82,16 +81,12 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
   console.log(chalk.green(' ✔︎ ') + 'Identified alternative refs')
 
   // write html back to disk
-  all_data.forEach(file_data => {
-    fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html)
-  })
+  all_data.forEach(file_data => fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html))
 
   // write data to disk
-  if (save_data) {
-    return fs.outputJson(path.join(text_dir, `.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2})
-  } else {
-    return Promise.resolve()
-  }
+  return save_data ?
+    fs.outputJson(path.join(text_dir, `.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2}) :
+    Promise.resolve()
 }
 
 module.exports = main
