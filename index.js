@@ -2,6 +2,7 @@ const chalk = require('chalk')
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
+const getReportData = require('./lib/get-report-data')
 const identifyAlternatives = require('./lib/id-alternatives')
 const log = require('single-line-log').stdout
 const path = require('path')
