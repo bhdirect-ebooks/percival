@@ -35,7 +35,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
 
     if (paren.data.length > 0) {
       file_data.in_parens = paren.data
-      file_data.final_html = toXHTML(paren.html)
+      file_data.final_html = paren.html
     }
 
     log.clear()
