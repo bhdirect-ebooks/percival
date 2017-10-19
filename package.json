@@ -27,7 +27,6 @@
     "lodash.escaperegexp": "^4.1.2",
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
-    "lodash.lastindexof": "^4.0.5",
     "lodash.sortby": "^4.7.0",
     "lodash.uniq": "^4.5.0",
     "recursive-iterator": "^3.3.0",
