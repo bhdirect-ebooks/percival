@@ -23,6 +23,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
       in_parens: [],
       nearby: [],
       with_context: [],
+      second_pass: [],
       final_html: toXHTML(tagged)
     }
   })
@@ -61,6 +62,13 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     if (remote.data.length > 0) {
       file_data.with_context = remote.data
       file_data.final_html = reduceErrors(toXHTML(remote.tagged), opts)
+    }
+
+    const remote2 = deepCopyTagRefs(toJSON(file_data.final_html), 'context', opts, log, file_data.name)
+
+    if (remote2.data.length > 0) {
+      file_data.second_pass = remote2.data
+      file_data.final_html = reduceErrors(toXHTML(remote2.tagged), opts)
     }
 
     log.clear()
