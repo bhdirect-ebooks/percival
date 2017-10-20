@@ -79,7 +79,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
 
   // id and tag all possible ref alternatives
   all_data = all_data.map(file_data => {
-    log(' - Identifying alternative refs: ' + file_data.name)
+    log(' - Identifying alternate refs: ' + file_data.name)
 
     file_data.final_html = identifyAlternatives(file_data.final_html, opts)
     file_data.final_html = reduceErrors(file_data.final_html, opts)
@@ -88,7 +88,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     return file_data
   })
   log('')
-  console.log(chalk.green(' ✔︎ ') + 'Identified alternative refs')
+  console.log(chalk.green(' ✔︎ ') + 'Identified alternate refs')
 
   // write html back to disk
   all_data.forEach(file_data => fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html))
