@@ -17,7 +17,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     log.clear()
 
     return {
-      id: file.toLowerCase().replace('.xhtml', ''),
+      id: file.toLowerCase().replace(/^[^_]+(\d\d)_[a-z]+(\d\d\d?)_.*?$/, 'percy-$1-$2'),
       name: file,
       explicit: data,
       in_parens: [],
@@ -29,7 +29,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
   })
   log('')
   console.log(chalk.green(' ✔︎ ') + 'Tagged explicit refs')
-
+/*
   // tag parenthetical orphans
   all_data = all_data.map(file_data => {
     log(' - Tagging parenthetical orphans: ' + file_data.name)
@@ -89,14 +89,14 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
   })
   log('')
   console.log(chalk.green(' ✔︎ ') + 'Identified alternate refs')
-
+*/
   // write html back to disk
   all_data.forEach(file_data => fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html))
 
-  // write data to disk
+  // write 'debug' data to disk, if requested
   return save_data ?
     fs.outputJson(path.join(text_dir, `.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2}) :
-    Promise.resolve()
+    Promise.resolve(all_data)
 }
 
 module.exports = main

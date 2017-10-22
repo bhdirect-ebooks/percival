@@ -5,6 +5,8 @@ const fs = require('fs-extra')
 const inquirer = require('inquirer')
 const main = require('../index.js')
 const path = require('path')
+const { prepReportData } = require('../lib/report/prep-report-data')
+const serveReport = require('../lib/report/serve-report')
 
 /* eslint brace-style: 0 */
 
@@ -118,7 +120,13 @@ const parseEpubContent = (dir, save_data) => {
         if (files.length > 1) console.log(`\nFinding Bible references in ${files.length} text files...\n`)
 
         main(text_dir, files, { vers, lang }, save_data)
-          .then(() => { console.log('\nDone!') })
+          .then(all_data => {
+            if (all_data) {
+              fs.outputJsonSync(path.join(dir, 'META-INF', 'percival.json'), prepReportData(all_data, { vers, lang }))
+              serveReport(dir)
+            }
+            console.log('\nDone!')
+          })
       })
   } else {
     throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.')
