@@ -17,7 +17,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
     log.clear()
 
     return {
-      id: file.toLowerCase().replace(/^[^_]+(\d\d)_[a-z]+(\d\d\d?)_.*?$/, 'percy-$1-$2'),
+      id: file.toLowerCase().replace(/^[^_]+(\d\d)_[a-z]+(\d\d\d?)_.*?$/, '$1-$2'),
       name: file,
       explicit: data,
       in_parens: [],
