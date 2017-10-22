@@ -2614,6 +2614,10 @@ package-json@^4.0.0:
     registry-url "^3.0.3"
     semver "^5.1.0"
 
+pad-number@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/pad-number/-/pad-number-0.0.4.tgz#cb8fdc0e4df19c62b341f6b77ad683860f14be39"
+
 parse-glob@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/parse-glob/-/parse-glob-3.0.4.tgz#b2c376cfb11f35513badd173ef0bb6e3a388391c"

@@ -29,7 +29,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
   })
   log('')
   console.log(chalk.green(' ✔︎ ') + 'Tagged explicit refs')
-/*
+
   // tag parenthetical orphans
   all_data = all_data.map(file_data => {
     log(' - Tagging parenthetical orphans: ' + file_data.name)
@@ -89,7 +89,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
   })
   log('')
   console.log(chalk.green(' ✔︎ ') + 'Identified alternate refs')
-*/
+
   // write html back to disk
   all_data.forEach(file_data => fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html))
 
