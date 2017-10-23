@@ -1,10 +1,13 @@
+const chalk = require('chalk')
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
 const identifyAlternatives = require('./lib/id-alternatives')
 const log = require('single-line-log').stdout
 const path = require('path')
+const reduceErrors = require('./lib/reduce-errors')
 const tagLocal = require('./lib/tag-local-orphans')
+const tagInParens = require('./lib/tag-paren-orphans')
 
 const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data = false) => {
   // tag explicit refs and initialize data object
@@ -17,61 +20,83 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
       id: file.toLowerCase().replace('.xhtml', ''),
       name: file,
       explicit: data,
-      nearby: {},
-      with_context: {},
+      in_parens: [],
+      nearby: [],
+      with_context: [],
+      second_pass: [],
       final_html: toXHTML(tagged)
     }
   })
   log('')
-  console.log(' ✔︎ Tagged explicit refs')
+  console.log(chalk.green(' ✔︎ ') + 'Tagged explicit refs')
 
-  // locate and tag all orphans
+  // tag parenthetical orphans
   all_data = all_data.map(file_data => {
-    log(' - Tagging orphaned refs: ' + file_data.name)
+    log(' - Tagging parenthetical orphans: ' + file_data.name)
+    const paren = tagInParens(file_data.final_html, opts)
+
+    if (paren.data.length > 0) {
+      file_data.in_parens = paren.data
+      file_data.final_html = reduceErrors(paren.html, opts)
+    }
+
+    log.clear()
+    return file_data
+  })
+  log('')
+  console.log(chalk.green(' ✔︎ ') + 'Tagged parenthetical orphans')
+
+  // locate and tag remaining orphans
+  all_data = all_data.map(file_data => {
+    log(' - Tagging remaining orphans: ' + file_data.name)
 
     const local = tagLocal(file_data.final_html, opts)
 
     if (local.data.length > 0) {
       file_data.nearby = local.data
-      file_data.final_html = local.html
+      file_data.final_html = reduceErrors(local.html, opts)
     }
 
     const remote = deepCopyTagRefs(toJSON(file_data.final_html), 'context', opts, log, file_data.name)
 
     if (remote.data.length > 0) {
       file_data.with_context = remote.data
-      file_data.final_html = toXHTML(remote.tagged)
+      file_data.final_html = reduceErrors(toXHTML(remote.tagged), opts)
+    }
+
+    const remote2 = deepCopyTagRefs(toJSON(file_data.final_html), 'context', opts, log, file_data.name)
+
+    if (remote2.data.length > 0) {
+      file_data.second_pass = remote2.data
+      file_data.final_html = reduceErrors(toXHTML(remote2.tagged), opts)
     }
 
     log.clear()
     return file_data
   })
   log('')
-  console.log(' ✔︎ Tagged orphaned refs')
+  console.log(chalk.green(' ✔︎ ') + 'Tagged remaining orphans')
 
   // id and tag all possible ref alternatives
   all_data = all_data.map(file_data => {
-    log(' - Identifying alternative refs: ' + file_data.name)
+    log(' - Identifying alternate refs: ' + file_data.name)
 
     file_data.final_html = identifyAlternatives(file_data.final_html, opts)
+    file_data.final_html = reduceErrors(file_data.final_html, opts)
 
     log.clear()
     return file_data
   })
   log('')
-  console.log(' ✔︎ Identified alternative refs')
+  console.log(chalk.green(' ✔︎ ') + 'Identified alternate refs')
 
   // write html back to disk
-  all_data.forEach(file_data => {
-    fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html)
-  })
+  all_data.forEach(file_data => fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html))
 
   // write data to disk
-  if (save_data) {
-    return fs.outputJson(path.join(text_dir, `.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2})
-  } else {
-    return Promise.resolve()
-  }
+  return save_data ?
+    fs.outputJson(path.join(text_dir, `.percival/data-${new Date().toISOString()}.json`), all_data, {space: 2}) :
+    Promise.resolve()
 }
 
 module.exports = main
