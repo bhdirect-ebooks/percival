@@ -132,7 +132,7 @@ const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
         fs.writeJsonSync(rc_loc, crossrc, {spaces: 2})
       }
 
-      console.log(`\n${chalk.bold('Finding Bible references in:')} \n${chalk.cyan(vol_title)}...\n`)
+      console.log(`\n${chalk.bold('Finding Bible references in:')} \n${chalk.green(vol_title)}\n`)
 
       main(text_dir, files, { vers, lang }, data_save_mode)
         .then(all_data => {
