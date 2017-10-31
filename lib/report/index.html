@@ -1,10 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html>
+
 <head>
   <meta charset="utf-8">
-  <title>Hello World</title>
+  <title>percival</title>
+  <link href="static/img/favicon.png" rel="icon">
+  <link href="static/css/font-awesome.min.css" rel="stylesheet">
+  <link href="static/css/simple-line-icons.css" rel="stylesheet">
+  <link href="static/css/coreui.css" rel="stylesheet">
+  <link href="static/css/mywsb-dev-percy.css" rel="stylesheet">
 </head>
-  <body>
-    <h1>Hello World!</h1>
-  </body>
+
+<body class="app aside-menu-fixed">
+  <div id="app"></div>
+  <script src="app.js"></script>
+  <script>
+    Elm.Main.embed(document.getElementById("app"));
+  </script>
+</body>
+
 </html>
