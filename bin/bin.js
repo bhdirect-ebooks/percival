@@ -169,7 +169,7 @@ const runPercival = dir => {
     inquirer.prompt(overwrite_prompt)
       .then(response => {
         if (response.overwrite) doIt()
-        else console.log('\n  Ok. I won\'t make any changes...\n  To pick up where you left off, use `percival continue`\n  Or if you\'re ready to finalize your work, use `percival finish`')
+        else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or if you\'re ready to finalize your work, use `percival finish`')
       })
   } else if (continue_mode) {
     serveReport(dir)
@@ -178,7 +178,7 @@ const runPercival = dir => {
     inquirer.prompt(finish_prompt)
       .then(response => {
         if (response.finish) finishIt()
-        else console.log('\n  Ok. I won\'t make any changes...\n  To pick up where you left off, use `percival continue`\n  Or to start over, just use plain ol\' `percival`')
+        else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or to start over, just use plain ol\' `percival`')
       })
   } else {
     doIt()
