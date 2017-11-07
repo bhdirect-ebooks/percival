@@ -13,9 +13,45 @@
 
 <body class="app aside-menu-fixed">
   <div id="app"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-whitespace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js"></script>
   <script src="app.js"></script>
   <script>
-    Elm.Main.embed(document.getElementById("app"));
+    const app = Elm.Main.embed(document.getElementById('app'))
+
+    const scrollMyDiv = (id, contain_id, pad) => {
+      const el = document.getElementById(id)
+      if (el !== null) {
+        const div = document.getElementById(contain_id)
+        const bottom_bit = div.scrollHeight - div.offsetHeight
+        requestAnimationFrame(() => {
+          el.scrollIntoView(true)
+          if (div.scrollTop < bottom_bit) {
+            div.scrollTop -= pad
+          }
+        })
+      }
+    }
+
+    app.ports.scrollList.subscribe(id => {
+      scrollMyDiv(id, 'scripture-list', 70)
+    })
+
+    app.ports.scrollDoc.subscribe(id => {
+      scrollMyDiv(id, 'title-doc', 300)
+    })
+
+    app.ports.backtoTop.subscribe(yes => {
+      if (yes) {
+        document.getElementById('title-doc').scrollTop = 0
+        document.getElementById('scripture-list').scrollTop = 0
+      }
+    })
+
+    const reportRefId = id => {
+      app.ports.clickedRef.send(id)
+    }
   </script>
 </body>
 
