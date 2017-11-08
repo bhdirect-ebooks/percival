@@ -165,7 +165,7 @@ const runPercival = dir => {
     return ''
   }
 
-  if (fs.existsSync(percy_data_loc) && !continue_mode) {
+  if (fs.existsSync(percy_data_loc) && !continue_mode && !finish_mode) {
     inquirer.prompt(overwrite_prompt)
       .then(response => {
         if (response.overwrite) doIt()
