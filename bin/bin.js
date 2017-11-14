@@ -155,7 +155,7 @@ const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
         fs.writeJsonSync(rc_loc, crossrc, {spaces: 2})
       }
 
-      console.log(`\n${chalk.bold('Finding Bible references in:')} \n${chalk.green(vol_title)}\n`)
+      console.log(`${chalk.bold('Locating Bible references in:')} \n${chalk.green(vol_title)}\n`)
 
       main(text_dir, files, { vers, lang }, data_save_mode)
         .then(all_data => {
@@ -252,7 +252,7 @@ if (continue_mode || finish_mode) {
   console.log(`Checking EPUB validity...`)
   epubCheck(cwd).then(data => {
     if (data.pass) {
-      console.log(`✔ Valid EPUB\n`)
+      console.log(`✔ Valid EPUB`)
       runPercival(cwd)
     } else {
       let err_msg = '✘ This EPUB is not valid. Fix errors and try again.\n'
