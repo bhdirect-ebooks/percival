@@ -31,7 +31,7 @@ Once the initial tagging is complete and the server has started, it can be resta
 percival continue
 ```
 
-### Percival
+### Finish
 
 When all reference review work has been completed via percival's web interface, finalize the changes with the `finish` command (again, from the EPUB's root directory).
 
