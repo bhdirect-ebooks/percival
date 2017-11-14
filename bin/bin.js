@@ -6,8 +6,10 @@ const fs = require('fs-extra')
 const inquirer = require('inquirer')
 const main = require('../index.js')
 const path = require('path')
-const { prepReportData } = require('../lib/report/prep-report-data')
 const serveReport = require('../lib/report/serve-report')
+const { prepReportData } = require('../lib/report/prep-report-data')
+const { toJSON, toXHTML } = require('./lib/himalaya-io')
+
 
 /* eslint brace-style: 0 */
 
@@ -143,6 +145,16 @@ const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
     })
 }
 
+const getPercyHtml = (doc_id, blocks) => {
+  const block_ids = blocks.keys()
+  return block_ids
+    .filter(bid => bid.startsWith(`${doc_id}-`))
+    .join('\n')
+    .replace(/"({[^}]+})"/g, "'$1'")
+    .replace(/&quot;/g, '"')
+    .replace(/(<a data-cross-ref='{"scripture":"[^"]+")[^}]+(}'>)/g, '$1$2')
+}
+
 const runPercival = dir => {
   const text_dir = path.join(dir, 'OEBPS', 'text')
   const rc_loc = path.join(dir, 'META-INF', 'crossrc.json')
@@ -162,7 +174,26 @@ const runPercival = dir => {
   }
 
   const finishIt = () => {
-    return ''
+    console.log(`\nWriting files and cleaning up...`)
+    const percy_data = fs.readJsonSync(percy_data_loc, { encoding: 'utf8' })
+
+    for (const doc in percy_data.docs) {
+      if (percy_data.docs.hasOwnProperty(doc) && percy_data.docs[doc].name) {
+        const file = percy_data.docs[doc].name
+        const src_html = fs.readFileSync(path.join(text_dir, file), { encoding: 'utf8' })
+        const new_html = getPercyHtml(doc, percy_data.blocks)
+        const body_sect_regex = /(<body[^>]*?>\s+<section[^>]*?>)[\s\S]+(<\/section>\s+<\/body>)/
+        const body_regex = /(<body[^>]*?>)[\s\S]+(<\/body>)/
+        const new_json = body_sect_regex.text(src_html) ?
+          toJSON(src_html.replace(body_sect_regex, `$1${new_html}$2`)) :
+          toJSON(src_html.replace(body_regex, `$1${new_html}$2`))
+
+        fs.outputFileSync(path.join(text_dir, file), toXHTML(new_json))
+      }
+    }
+
+    fs.removeSync(percy_data_loc)
+    console.log(`\n${chalk.green('All done!')}`)
   }
 
   if (fs.existsSync(percy_data_loc) && !continue_mode && !finish_mode) {
