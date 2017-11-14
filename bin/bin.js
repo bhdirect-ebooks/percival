@@ -1,10 +1,16 @@
 #!/usr/bin/env node
 
+const beautify = require('js-beautify')
+const chalk = require('chalk')
 const epubCheck = require('epub-check')
 const fs = require('fs-extra')
 const inquirer = require('inquirer')
 const main = require('../index.js')
 const path = require('path')
+const serveReport = require('../lib/report/serve-report')
+const { prepReportData } = require('../lib/report/prep-report-data')
+const { toJSON, toXHTML } = require('../lib/himalaya-io')
+
 
 /* eslint brace-style: 0 */
 
@@ -12,9 +18,31 @@ process.on('unhandledRejection', (err) => {
   console.log(err)
 })
 
+const beautify_opts =
+  { 'indent_size': 2
+  , 'indent_char': ' '
+  , 'indent_with_tabs': false
+  , 'eol': '\n'
+  , 'end_with_newline': true
+  , 'indent_level': 0
+  , 'preserve_newlines': true
+  , 'max_preserve_newlines': 2
+  , 'html':
+    { 'indent_inner_html': true
+    , 'extra_liners': ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    , 'wrap_line_length': 0
+    }
+  , 'css':
+    { 'selector_separator_newline': true
+    , 'newline_between_rules': true
+    }
+  }
+
 const cwd = process.cwd()
 const skip_validate = process.argv.includes('-s')
 const data_save_mode = process.argv.includes('-d')
+const continue_mode = process.argv.includes('continue')
+const finish_mode = process.argv.includes('finish')
 
 const setPrompts = (crossrc = {}) => {
   let prompts
@@ -43,14 +71,14 @@ const setPrompts = (crossrc = {}) => {
   }
 
   if (crossrc.hasOwnProperty('titleProps')) {
-    prompts = crossrc.titleProps.hasOwnProperty('versification') ? [] : [trans_prompt]
+    prompts = crossrc.titleProps.hasOwnProperty('versification') && crossrc.titleProps.versification !== '' ? [] : [trans_prompt]
   } else {
     prompts = [trans_prompt, lang_prompt]
   }
   return prompts
 }
 
-const getVersification = (translation) => {
+const getVersification = translation => {
   switch (translation) {
   case 'CSB/HCSB, ESV, AMP, NASB, etc.':
     return 'default'
@@ -71,7 +99,7 @@ const getVersification = (translation) => {
   }
 }
 
-const getLang = (language) => {
+const getLang = language => {
   switch (language) {
   case 'English':
     return 'en'
@@ -84,56 +112,148 @@ const getLang = (language) => {
   }
 }
 
-const parseEpubContent = (dir, save_data) => {
-  const text_dir = path.join(dir, 'OEBPS/text')
-  const rc_loc = path.join(dir, 'META-INF/crossrc.json')
+const overwrite_prompt = [{
+  type: 'confirm',
+  name: 'overwrite',
+  message: 'Percival data found. Are you sure you want to start over and overwrite existing data?',
+  default: false
+}]
 
-  if (fs.existsSync(text_dir)) {
-    const files = fs.readdirSync(text_dir)
-      .filter(thing => fs.lstatSync(path.join(text_dir, thing)).isFile())
-      .filter(file => file.endsWith('.xhtml'))
-      .filter(file => !/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(file))
+const finish_prompt = [{
+  type: 'confirm',
+  name: 'finish',
+  message: 'Ready to finish? Great! Say yes, and I will make your selected changes and do some final cleanup.',
+  default: false
+}]
 
-    if (files.length === 0) throw new Error('No qualifying XHTML file found in the `OEBPS/text` directory.')
-    if (save_data) console.log(`Data save/inspect mode 🔎`)
+const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
+  const files = fs.readdirSync(text_dir)
+    .filter(thing => fs.lstatSync(path.join(text_dir, thing)).isFile())
+    .filter(file => file.endsWith('.xhtml'))
+    .filter(file => !/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(file))
 
-    const crossrc = fs.existsSync(rc_loc) ? JSON.parse(fs.readFileSync(rc_loc, {encoding: 'utf8'})) : {}
+  if (files.length === 0) throw new Error('No qualifying XHTML file found in the `OEBPS/text` directory.')
+  if (data_save_mode) console.log(`👨‍💻 Data save/inspect mode`)
 
-    inquirer.prompt(setPrompts(crossrc))
+  const crossrc = fs.existsSync(rc_loc) ? JSON.parse(fs.readFileSync(rc_loc, {encoding: 'utf8'})) : {}
+  let vol_title = crossrc.titleProps.title.collection ?
+    `${crossrc.titleProps.title.collection}: ` : ''
+  vol_title += crossrc.titleProps.title.main
+
+  return inquirer.prompt(setPrompts(crossrc))
+    .then(response => {
+      const vers = response.translation ?
+        getVersification(response.translation) :
+        crossrc.titleProps.versification
+
+      const lang = response.language ?
+        getLang(response.language) :
+        crossrc.titleProps.language
+
+      if (crossrc.hasOwnProperty('titleProps') && !crossrc.titleProps.versification) {
+        crossrc.titleProps.versification = vers
+        fs.writeJsonSync(rc_loc, crossrc, {spaces: 2})
+      }
+
+      console.log(`${chalk.bold('Locating Bible references in:')} \n${chalk.green(vol_title)}\n`)
+
+      main(text_dir, files, { vers, lang }, data_save_mode)
+        .then(all_data => {
+          return all_data ?
+            fs.outputJsonSync(percy_data_loc, prepReportData(vol_title, all_data, { vers, lang })) :
+            Promise.resolve()
+        })
+    })
+}
+
+const getPercyHtml = (doc_id, blocks) => {
+  const block_ids = []
+
+  for (const block in blocks) {
+    if (blocks.hasOwnProperty(block) && blocks[block].html && block.startsWith(`${doc_id}-`)) {
+      block_ids.push(block)
+    }
+  }
+
+  return block_ids.map(block => blocks[block].html)
+    .join('\n')
+    .replace(/"({[^}]+})"/g, "'$1'")
+    .replace(/&quot;/g, '"')
+    .replace(/(<a data-cross-ref='{"scripture":"[^"]+")[^}]+(}'>)/g, '$1$2')
+}
+
+const runPercival = dir => {
+  const text_dir = path.join(dir, 'OEBPS', 'text')
+  const rc_loc = path.join(dir, 'META-INF', 'crossrc.json')
+  const percy_data_loc = path.join(dir, 'META-INF', 'percival.json')
+  console.log('')
+
+  const doIt = () => {
+    if (fs.existsSync(text_dir)) {
+      parseEpubContent(text_dir, rc_loc, percy_data_loc)
+        .then(() => {
+          serveReport(dir)
+          console.log('\n' + chalk.magenta.dim('Starting percival server...'))
+        })
+    } else {
+      throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.')
+    }
+  }
+
+  const finishIt = () => {
+    console.log(`\nWriting files and cleaning up...`)
+    const percy_data = fs.readJsonSync(percy_data_loc, { encoding: 'utf8' })
+
+    for (const doc in percy_data.docs) {
+      if (percy_data.docs.hasOwnProperty(doc) && percy_data.docs[doc].name) {
+        const file = percy_data.docs[doc].name
+        const src_html = fs.readFileSync(path.join(text_dir, file), { encoding: 'utf8' })
+        const new_html = getPercyHtml(doc, percy_data.blocks)
+        const body_sect_regex = /(<body[^>]*?>\s+<section[^>]*?>)[\s\S]+(<\/section>\s+<\/body>)/
+        const body_regex = /(<body[^>]*?>)[\s\S]+(<\/body>)/
+        const new_json = body_sect_regex.test(src_html) ?
+          toJSON(src_html.replace(body_sect_regex, `$1${new_html}$2`)) :
+          toJSON(src_html.replace(body_regex, `$1${new_html}$2`))
+
+        fs.outputFileSync(path.join(text_dir, file), beautify.html(toXHTML(new_json), beautify_opts))
+      }
+    }
+
+    fs.removeSync(percy_data_loc)
+    console.log(`\n${chalk.green('All done!')}`)
+  }
+
+  if (fs.existsSync(percy_data_loc) && !continue_mode && !finish_mode) {
+    inquirer.prompt(overwrite_prompt)
       .then(response => {
-        const vers = response.translation ?
-          getVersification(response.translation) :
-          crossrc.titleProps.versification
-
-        const lang = response.language ?
-          getLang(response.language) :
-          crossrc.titleProps.language
-
-        if (crossrc.hasOwnProperty('titleProps') && !crossrc.titleProps.versification) {
-          crossrc.titleProps.versification = vers
-          fs.writeJson(rc_loc, crossrc, {spaces: 2})
-        }
-
-        if (files.length === 1) console.log('\nFinding Bible references in 1 text file...\n')
-        if (files.length > 1) console.log(`\nFinding Bible references in ${files.length} text files...\n`)
-
-        main(text_dir, files, { vers, lang }, save_data)
-          .then(() => { console.log('\nDone!') })
+        if (response.overwrite) doIt()
+        else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or if you\'re ready to finalize your work, use `percival finish`')
+      })
+  } else if (continue_mode) {
+    serveReport(dir)
+    console.log(chalk.magenta.dim('Starting percival server...'))
+  } else if (finish_mode) {
+    inquirer.prompt(finish_prompt)
+      .then(response => {
+        if (response.finish) finishIt()
+        else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or to start over, just use plain ol\' `percival`')
       })
   } else {
-    throw new Error('`OEBPS/text` folder not found. Try again from an EPUB root directory.')
+    doIt()
   }
 }
 
-if (skip_validate) {
-  console.log(`Skipping EpubCheck 🤗`)
-  parseEpubContent(cwd, data_save_mode)
+if (continue_mode || finish_mode) {
+  runPercival(cwd)
+} else if (skip_validate) {
+  console.log(`🤗 Skipping EpubCheck`)
+  runPercival(cwd)
 } else {
   console.log(`Checking EPUB validity...`)
   epubCheck(cwd).then(data => {
     if (data.pass) {
-      console.log(`✔ Valid EPUB\n`)
-      parseEpubContent(cwd, data_save_mode)
+      console.log(`✔ Valid EPUB`)
+      runPercival(cwd)
     } else {
       let err_msg = '✘ This EPUB is not valid. Fix errors and try again.\n'
       data.messages.forEach(msg => {

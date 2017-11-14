@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>percival</title>
+  <link href="static/img/favicon.png" rel="icon">
+  <link href="static/css/font-awesome.min.css" rel="stylesheet">
+  <link href="static/css/simple-line-icons.css" rel="stylesheet">
+  <link href="static/css/coreui.css" rel="stylesheet">
+  <link href="static/css/mywsb-dev-percy.css" rel="stylesheet">
+</head>
+
+<body class="app aside-menu-fixed">
+  <div id="app"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js"></script>
+  <script src="app.js"></script>
+  <script>
+    const app = Elm.Main.embed(document.getElementById('app'))
+
+    const scrollMyDiv = (id, contain_id, pad) => {
+      const el = document.getElementById(id)
+      if (el !== null) {
+        const div = document.getElementById(contain_id)
+        const bottom_bit = div.scrollHeight - div.offsetHeight
+        requestAnimationFrame(() => {
+          el.scrollIntoView(true)
+          if (div.scrollTop < bottom_bit) {
+            div.scrollTop -= pad
+          }
+        })
+      }
+    }
+
+    app.ports.scrollList.subscribe(id => {
+      scrollMyDiv(id, 'scripture-list', 70)
+    })
+
+    app.ports.scrollDoc.subscribe(id => {
+      scrollMyDiv(id, 'title-doc', 300)
+    })
+
+    app.ports.backtoTop.subscribe(yes => {
+      if (yes) {
+        document.getElementById('title-doc').scrollTop = 0
+        document.getElementById('scripture-list').scrollTop = 0
+      }
+    })
+
+    const reportRefId = id => {
+      app.ports.clickedRef.send(id)
+    }
+  </script>
+</body>
+
+</html>
