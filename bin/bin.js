@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const beautify = require('js-beautify')
 const chalk = require('chalk')
 const epubCheck = require('epub-check')
 const fs = require('fs-extra')
@@ -8,7 +9,7 @@ const main = require('../index.js')
 const path = require('path')
 const serveReport = require('../lib/report/serve-report')
 const { prepReportData } = require('../lib/report/prep-report-data')
-const { toJSON, toXHTML } = require('./lib/himalaya-io')
+const { toJSON, toXHTML } = require('../lib/himalaya-io')
 
 
 /* eslint brace-style: 0 */
@@ -16,6 +17,26 @@ const { toJSON, toXHTML } = require('./lib/himalaya-io')
 process.on('unhandledRejection', (err) => {
   console.log(err)
 })
+
+const beautify_opts =
+  { 'indent_size': 2
+  , 'indent_char': ' '
+  , 'indent_with_tabs': false
+  , 'eol': '\n'
+  , 'end_with_newline': true
+  , 'indent_level': 0
+  , 'preserve_newlines': true
+  , 'max_preserve_newlines': 2
+  , 'html':
+    { 'indent_inner_html': true
+    , 'extra_liners': ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    , 'wrap_line_length': 0
+    }
+  , 'css':
+    { 'selector_separator_newline': true
+    , 'newline_between_rules': true
+    }
+  }
 
 const cwd = process.cwd()
 const skip_validate = process.argv.includes('-s')
@@ -146,9 +167,15 @@ const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
 }
 
 const getPercyHtml = (doc_id, blocks) => {
-  const block_ids = blocks.keys()
-  return block_ids
-    .filter(bid => bid.startsWith(`${doc_id}-`))
+  const block_ids = []
+
+  for (const block in blocks) {
+    if (blocks.hasOwnProperty(block) && blocks[block].html && block.startsWith(`${doc_id}-`)) {
+      block_ids.push(block)
+    }
+  }
+
+  return block_ids.map(block => blocks[block].html)
     .join('\n')
     .replace(/"({[^}]+})"/g, "'$1'")
     .replace(/&quot;/g, '"')
@@ -184,11 +211,11 @@ const runPercival = dir => {
         const new_html = getPercyHtml(doc, percy_data.blocks)
         const body_sect_regex = /(<body[^>]*?>\s+<section[^>]*?>)[\s\S]+(<\/section>\s+<\/body>)/
         const body_regex = /(<body[^>]*?>)[\s\S]+(<\/body>)/
-        const new_json = body_sect_regex.text(src_html) ?
+        const new_json = body_sect_regex.test(src_html) ?
           toJSON(src_html.replace(body_sect_regex, `$1${new_html}$2`)) :
           toJSON(src_html.replace(body_regex, `$1${new_html}$2`))
 
-        fs.outputFileSync(path.join(text_dir, file), toXHTML(new_json))
+        fs.outputFileSync(path.join(text_dir, file), beautify.html(toXHTML(new_json), beautify_opts))
       }
     }
 

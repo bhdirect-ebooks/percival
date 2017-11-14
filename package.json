@@ -28,6 +28,7 @@
     "he": "^1.1.1",
     "himalaya": "^0.2.10",
     "inquirer": "^3.2.1",
+    "js-beautify": "^1.7.4",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
