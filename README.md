@@ -18,7 +18,7 @@ sudo npm i -g @bhdirect/percival
 
 To begin, navigate to the EPUB's root directory via command line and simply enter `percival`.
 
-```bash
+```
 cd path/to/epub/root
 percival
 ```
@@ -27,7 +27,7 @@ percival
 
 Once the initial tagging is complete and the server has started, it can be restarted (from the EPUB's root directory) with the `continue` command to continue reviewing references.
 
-```bash
+```
 percival continue
 ```
 
@@ -35,13 +35,15 @@ percival continue
 
 When all reference review work has been completed via percival's web interface, finalize the changes with the `finish` command (again, from the EPUB's root directory).
 
-```bash
+```
 percival finish
 ```
 
 ## Help
 
 Help is available in the web interface by clicking the "Help" button or by pressing `h`.
+
+See also: [Using Percival](https://www.youtube.com/playlist?list=PLifYXRAIGRblYIXC9-SiQOXCnGBb2h71l)
 
 ## Info
 
