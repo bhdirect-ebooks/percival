@@ -209,7 +209,7 @@ const runPercival = dir => {
         const file = percy_data.docs[doc].name
         const src_html = fs.readFileSync(path.join(text_dir, file), { encoding: 'utf8' })
         const new_html = getPercyHtml(doc, percy_data.blocks)
-        const body_sect_regex = /(<body[^>]*?>\s+<section[^>]*?>)[\s\S]+(<\/section>\s+<\/body>)/
+        const body_sect_regex = /(<body[^>]*?>\s+<(?:section|div)[^>]*?>)[\s\S]+(<\/(?:section|div)>\s+<\/body>)/
         const body_regex = /(<body[^>]*?>)[\s\S]+(<\/body>)/
         const new_json = body_sect_regex.test(src_html) ?
           toJSON(src_html.replace(body_sect_regex, `$1${new_html}$2`)) :
