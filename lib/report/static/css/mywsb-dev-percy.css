@@ -109,9 +109,6 @@
 /** 1. Correct the inheritance and scaling of font size in all browsers. 2. Correct the odd `em` font sizing in all browsers. */
 .blocks code, .blocks kbd, .blocks samp { font-family: monospace, monospace; /* 1 */ font-size: 1em; /* 2 */ }
 
-/** Add the correct font style in Android 4.3-. */
-.blocks dfn { font-style: italic; }
-
 /** Add the correct background and color in IE 9-. */
 .blocks mark { background-color: #ff0; color: #000; }
 
@@ -352,14 +349,14 @@
 
 /* Definition lists */
 .blocks dt { clear: both; padding: 0 0 1rem 0; text-align: center; }
-.blocks dt dfn { font: normal bold 0.6666666667rem -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; }
+.blocks dt dfn { font: normal bold 0.95em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; line-height: 1.5; }
 
 .blocks dd { margin: 0; padding: 0 0 2rem 0; }
 .blocks dd p { text-indent: 0; }
 
 .blocks .abbr-list { padding: 0 0 0 2rem; }
 .blocks .abbr-list dt { clear: left; float: left; padding: 0; text-align: left; width: 20%; }
-.blocks .abbr-list dt dfn { font: normal normal 0.6666666667rem -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; }
+.blocks .abbr-list dt dfn { font: normal normal 0.95em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; line-height: 1.5; }
 .blocks .abbr-list dd { float: left; padding: 0 0.25rem; width: 75%; }
 .blocks .abbr-list:after { clear: both; content: ""; display: table; }
 
@@ -398,8 +395,8 @@
 .blocks .scriptext .italic, .scriptext .i { font-style: normal; }
 
 /* Pull quotes */
-.blocks .pull-center, .blocks .pull-left, .blocks .pull-right { border: none; font-size: 0.875rem; letter-spacing: 0.6rem; margin: 2rem 4rem; max-width: 70%; padding: 0; width: 70%; text-transform: uppercase; display: block; float: none; text-align: center; }
-.blocks .pull-center p, .blocks .pull-left p, .blocks .pull-right p { text-indent: 0; text-align: left; }
+.blocks .pull-center, .blocks .pull-left, .blocks .pull-right { border: none !important; letter-spacing: 0.15rem; margin: 2rem 4rem; max-width: 70%; padding: 0; width: 70%; text-transform: uppercase; display: block; float: none; text-align: center; }
+.blocks .pull-center p, .blocks .pull-left p, .blocks .pull-right p { font-size: 0.75rem; text-indent: 0; text-align: left; }
 .blocks .pull-center .sig, .blocks .pull-left .sig, .blocks .pull-right .sig { margin-left: 0; text-align: right; }
 
 @media screen and (min-width: 30em) { .blocks .pull-left { float: left; margin: 2rem; max-width: 30%; width: 30%; }
@@ -408,7 +405,7 @@
 \*------------------------------------*/
 /** Dictionary Article */
 .blocks article { margin: 2rem 0; }
-.blocks article dfn { color: #00449e; display: inline-block; font: 1.5rem; padding: 0 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: left; }
+.blocks article dfn { color: #00449e; display: inline-block; font: normal bold 1.5rem -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; padding: 0 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: left; }
 
 /** Footer (for footnotes) */
 .blocks footer { border-top: 1px solid #ccc; margin: 2rem 0 0 0; padding: 1rem 0 0 0; }
@@ -444,7 +441,7 @@
 .blocks span[epub|type~=index-term], .blocks span[epub\:type~=index-term] { padding: 0 0.25rem 0 0; }
 
 /** Footnote divs */
-.blocks div[epub|type~=footnote] p, .blocks div[epub\:type~=footnote] p { margin-left: 2rem; text-align: left; text-indent: -2rem; }
+.blocks div[epub|type~=footnote] p, .blocks div[epub\:type~=footnote] p { margin-left: 1.5rem; text-align: left; text-indent: -1.5rem; }
 
 /*------------------------------------*\ #TEXT-GENERAL
 \*------------------------------------*/
@@ -455,7 +452,7 @@
 
 .blocks .left { text-align: left !important; }
 
-.blocks .hang { margin-left: 1.5rem; text-indent: -2rem; }
+.blocks .hang { margin-left: 1.5rem; text-indent: -1.5rem; }
 
 .blocks .noind { text-indent: 0; }
 
@@ -2934,7 +2931,7 @@
 
 .indent-0 { text-indent: 0; }
 
-.indent-hanging { margin-left: 1.5rem; text-indent: -2rem; }
+.indent-hanging { margin-left: 1.5rem; text-indent: -1.5rem; }
 
 .small-caps { font-variant: small-caps; }
 
