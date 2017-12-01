@@ -182,6 +182,9 @@ const getPercyHtml = (doc_id, blocks) => {
     .replace(/(<a data-cross-ref='{"scripture":"[^"]+")[^}]+(}'>)/g, '$1$2')
 }
 
+const getNewHtml = (orig_html, percy_html, regex) => orig_html
+  .replace(regex, (match, cg1, cg2) => cg1.concat(percy_html, cg2))
+
 const runPercival = dir => {
   const text_dir = path.join(dir, 'OEBPS', 'text')
   const rc_loc = path.join(dir, 'META-INF', 'crossrc.json')
@@ -208,12 +211,15 @@ const runPercival = dir => {
       if (percy_data.docs.hasOwnProperty(doc) && percy_data.docs[doc].name) {
         const file = percy_data.docs[doc].name
         const src_html = fs.readFileSync(path.join(text_dir, file), { encoding: 'utf8' })
-        const new_html = getPercyHtml(doc, percy_data.blocks)
+        const percy_html = getPercyHtml(doc, percy_data.blocks)
+
         const body_sect_regex = /(<body[^>]*?>\s+<(?:section|div)[^>]*?>)[\s\S]+(<\/(?:section|div)>\s+<\/body>)/
         const body_regex = /(<body[^>]*?>)[\s\S]+(<\/body>)/
-        const new_json = body_sect_regex.test(src_html) ?
-          toJSON(src_html.replace(body_sect_regex, `$1${new_html}$2`)) :
-          toJSON(src_html.replace(body_regex, `$1${new_html}$2`))
+
+        const new_html = body_sect_regex.test(src_html) ?
+          getNewHtml(src_html, percy_html, body_sect_regex) :
+          getNewHtml(src_html, percy_html, body_regex)
+        const new_json = toJSON(new_html)
 
         fs.outputFileSync(path.join(text_dir, file), beautify.html(toXHTML(new_json), beautify_opts))
       }
@@ -230,14 +236,22 @@ const runPercival = dir => {
         else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or if you\'re ready to finalize your work, use `percival finish`')
       })
   } else if (continue_mode) {
-    serveReport(dir)
-    console.log(chalk.magenta.dim('Starting percival server...'))
+    if (fs.existsSync(percy_data_loc)) {
+      serveReport(dir)
+      console.log(chalk.magenta.dim('Starting percival server...'))
+    } else {
+      console.log('\n  Hmm. I really want to start the server for you, but the data I need to continue isn\'t there. Say `percival`, and I\'ll do my thing!')
+    }
   } else if (finish_mode) {
-    inquirer.prompt(finish_prompt)
-      .then(response => {
-        if (response.finish) finishIt()
-        else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or to start over, just use plain ol\' `percival`')
-      })
+    if (fs.existsSync(percy_data_loc)) {
+      inquirer.prompt(finish_prompt)
+        .then(response => {
+          if (response.finish) finishIt()
+          else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or to start over, just use plain ol\' `percival`')
+        })
+    } else {
+      console.log('\n  Hmm. I really want to wrap things up, but the data I need to finish my job isn\'t there. Say `percival`, and I\'ll do my thing!')
+    }
   } else {
     doIt()
   }
