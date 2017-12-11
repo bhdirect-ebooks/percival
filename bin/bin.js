@@ -207,9 +207,9 @@ const runPercival = dir => {
     console.log(`\nWriting files and cleaning up...`)
     const percy_data = fs.readJsonSync(percy_data_loc, { encoding: 'utf8' })
 
-    for (const doc in percy_data.docs) {
-      if (percy_data.docs.hasOwnProperty(doc) && percy_data.docs[doc].name) {
-        const file = percy_data.docs[doc].name
+    for (const doc in percy_data.fs_docs) {
+      if (percy_data.fs_docs.hasOwnProperty(doc) && percy_data.fs_docs[doc].name) {
+        const file = percy_data.fs_docs[doc].name
         const src_html = fs.readFileSync(path.join(text_dir, file), { encoding: 'utf8' })
         const percy_html = getPercyHtml(doc, percy_data.blocks)
 
