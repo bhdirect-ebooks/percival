@@ -126,11 +126,25 @@ const finish_prompt = [{
   default: false
 }]
 
-const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
-  const files = fs.readdirSync(text_dir)
+const unconfPrompt = unconf_count => {
+  const num_agree = unconf_count > 1 ? 'references' : 'reference'
+  return [{
+    type: 'confirm',
+    name: 'unconf_finish',
+    message: `I found ${unconf_count} unconfirmed ${num_agree}. Are you sure you want to finish?`,
+    default: false
+  }]
+}
+
+const getFileNames = text_dir => {
+  return fs.readdirSync(text_dir)
     .filter(thing => fs.lstatSync(path.join(text_dir, thing)).isFile())
     .filter(file => file.endsWith('.xhtml'))
     .filter(file => !/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(file))
+}
+
+const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
+  const files = getFileNames(text_dir)
 
   if (files.length === 0) throw new Error('No qualifying XHTML file found in the `OEBPS/text` directory.')
   if (data_save_mode) console.log(`👨‍💻 Data save/inspect mode`)
@@ -166,7 +180,7 @@ const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
     })
 }
 
-const getPercyHtml = (doc_id, blocks) => {
+const getPercyHtml = (doc_id, blocks, remove_data) => {
   const block_ids = []
 
   for (const block in blocks) {
@@ -175,11 +189,15 @@ const getPercyHtml = (doc_id, blocks) => {
     }
   }
 
-  return block_ids.map(block => blocks[block].html)
+  const html = block_ids.map(block => blocks[block].html)
     .join('\n')
     .replace(/"({[^}]+})"/g, "'$1'")
     .replace(/&quot;/g, '"')
+
+  return !remove_data ? html : html
     .replace(/(<a data-cross-ref='{"scripture":"[^"]+")[^}]+(}'>)/g, '$1$2')
+    .replace(/<(?:hr|span) data-cross-context='{"parsing":[^}]+}' ?\/>/g, '')
+    .replace(/<span data-cross-context='{"parsing":[^}]+}'>([^<]*?)<\/span>/g, '$1')
 }
 
 const getNewHtml = (orig_html, percy_html, regex) => orig_html
@@ -190,6 +208,20 @@ const runPercival = dir => {
   const rc_loc = path.join(dir, 'META-INF', 'crossrc.json')
   const percy_data_loc = path.join(dir, 'META-INF', 'percival.json')
   console.log('')
+
+  const getUnconfCount = () => {
+    const percy_data = fs.readJsonSync(percy_data_loc, { encoding: 'utf8' })
+    let unconf_count = 0
+
+    for (const doc in percy_data.fs_docs) {
+      if (percy_data.fs_docs.hasOwnProperty(doc) && percy_data.fs_docs[doc].name) {
+        const percy_html = getPercyHtml(doc, percy_data.blocks, false)
+        const ref_array = percy_html.match(/data-cross-ref='{"scripture":[^}]+?}'/g)
+        unconf_count += ref_array.reduce((a,b) => { return b.includes('"confirmed":true') ? a : a + 1 }, 0)
+      }
+    }
+    return unconf_count
+  }
 
   const doIt = () => {
     if (fs.existsSync(text_dir)) {
@@ -211,7 +243,7 @@ const runPercival = dir => {
       if (percy_data.fs_docs.hasOwnProperty(doc) && percy_data.fs_docs[doc].name) {
         const file = percy_data.fs_docs[doc].name
         const src_html = fs.readFileSync(path.join(text_dir, file), { encoding: 'utf8' })
-        const percy_html = getPercyHtml(doc, percy_data.blocks)
+        const percy_html = getPercyHtml(doc, percy_data.blocks, true)
 
         const body_sect_regex = /(<body[^>]*?>\s+<(?:section|div)[^>]*?>)[\s\S]+(<\/(?:section|div)>\s+<\/body>)/
         const body_regex = /(<body[^>]*?>)[\s\S]+(<\/body>)/
@@ -232,8 +264,12 @@ const runPercival = dir => {
   if (fs.existsSync(percy_data_loc) && !continue_mode && !finish_mode) {
     inquirer.prompt(overwrite_prompt)
       .then(response => {
-        if (response.overwrite) doIt()
-        else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or if you\'re ready to finalize your work, use `percival finish`')
+        if (response.overwrite) {
+          console.log('')
+          doIt()
+        } else {
+          console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or if you\'re ready to finalize your work, use `percival finish`')
+        }
       })
   } else if (continue_mode) {
     if (fs.existsSync(percy_data_loc)) {
@@ -246,11 +282,27 @@ const runPercival = dir => {
     if (fs.existsSync(percy_data_loc)) {
       inquirer.prompt(finish_prompt)
         .then(response => {
-          if (response.finish) finishIt()
-          else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or to start over, just use plain ol\' `percival`')
+          if (response.finish) {
+            console.log(`\n${chalk.green('Checking for unconfirmed references...')}`)
+            const unconf_count = getUnconfCount()
+
+            if (unconf_count > 0) {
+              inquirer.prompt(unconfPrompt(unconf_count))
+                .then(res => {
+                  if (res.unconf_finish) finishIt()
+                  else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`')
+                })
+            } else {
+              console.log(`100% confirmed refs! That's what I like to see!`)
+              finishIt()
+            }
+
+          } else {
+            console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`\n  • Or to start over, just use plain ol\' `percival`')
+          }
         })
     } else {
-      console.log('\n  Hmm. I really want to wrap things up, but the data I need to finish my job isn\'t there. Say `percival`, and I\'ll do my thing!')
+      console.log('\n  Hmm. The data I need isn\'t there. Have you run percival on this directory? Say `percival`, and I\'ll do my thing!')
     }
   } else {
     doIt()
