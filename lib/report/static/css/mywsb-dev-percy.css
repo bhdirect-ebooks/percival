@@ -119,9 +119,9 @@
 .blocks small { font-size: 80%; }
 
 /** Prevent `sub` and `sup` elements from affecting the line height in all browsers. */
-.blocks sub { font-size: 0.6rem; line-height: 0; position: relative; top: 0.3em; vertical-align: baseline; }
+.blocks sub { font-size: 0.75rem; line-height: 0; position: relative; top: 0.3em; vertical-align: baseline; }
 
-.blocks sup { font-size: 0.6rem; line-height: 0; position: relative; top: -0.3em; vertical-align: baseline; }
+.blocks sup { font-size: 0.75rem; line-height: 0; position: relative; top: -0.3em; vertical-align: baseline; }
 
 /* Embedded content ========================================================================== */
 /** Add the correct display in IE 9-. */
@@ -398,7 +398,7 @@
 .blocks .scriptext .italic, .scriptext .i { font-style: normal; }
 
 /* Pull quotes */
-.blocks .pull-center, .blocks .pull-left, .blocks .pull-right { border: none; font-size: 0.875rem; letter-spacing: 0.6rem; margin: 2rem 4rem; max-width: 70%; padding: 0; width: 70%; text-transform: uppercase; display: block; float: none; text-align: center; }
+.blocks .pull-center, .blocks .pull-left, .blocks .pull-right { border: none; font-size: 0.875rem; letter-spacing: 0.6rem; margin: 2rem auto; max-width: 70%; padding: 0; width: 70%; text-transform: uppercase; display: block; float: none; text-align: center; }
 .blocks .pull-center p, .blocks .pull-left p, .blocks .pull-right p { text-indent: 0; text-align: left; }
 .blocks .pull-center .sig, .blocks .pull-left .sig, .blocks .pull-right .sig { margin-left: 0; text-align: right; }
 
@@ -1034,16 +1034,6 @@
  Media Query Extensions: -ns = not-small -m  = medium -l  = large
 
 */
-/* Height Scale */
-.h1 { height: 1rem; }
-
-.h2 { height: 2rem; }
-
-.h3 { height: 4rem; }
-
-.h4 { height: 8rem; }
-
-.h5 { height: 16rem; }
 
 /* Height Percentages - Based off of height of parent */
 .h-25 { height: 25%; }
