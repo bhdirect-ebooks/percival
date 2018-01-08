@@ -283,7 +283,7 @@ const runPercival = dir => {
       inquirer.prompt(finish_prompt)
         .then(response => {
           if (response.finish) {
-            console.log(`\n${chalk.green('Checking for unconfirmed references...')}`)
+            console.log(`\n${chalk.italic('Checking for unconfirmed refs...')}`)
             const unconf_count = getUnconfCount()
 
             if (unconf_count > 0) {
@@ -293,7 +293,7 @@ const runPercival = dir => {
                   else console.log('\n  Ok. I won\'t make any changes...\n\n  • To pick up where you left off, use `percival continue`')
                 })
             } else {
-              console.log(`100% confirmed refs! That's what I like to see!`)
+              console.log(`${chalk.green("100% confirmed refs! That's what I like to see!")}`)
               finishIt()
             }
 
