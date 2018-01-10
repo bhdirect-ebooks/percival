@@ -217,7 +217,9 @@ const runPercival = dir => {
       if (percy_data.fs_docs.hasOwnProperty(doc) && percy_data.fs_docs[doc].name) {
         const percy_html = getPercyHtml(doc, percy_data.blocks, false)
         const ref_array = percy_html.match(/data-cross-ref='{"scripture":[^}]+?}'/g)
-        unconf_count += ref_array.reduce((a,b) => { return b.includes('"confirmed":true') ? a : a + 1 }, 0)
+        if (ref_array) {
+          unconf_count += ref_array.reduce((a,b) => { return b.includes('"confirmed":true') ? a : a + 1 }, 0)
+        }
       }
     }
     return unconf_count
