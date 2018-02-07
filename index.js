@@ -9,7 +9,7 @@ const reduceErrors = require('./lib/reduce-errors')
 const tagLocal = require('./lib/tag-local-orphans')
 const tagInParens = require('./lib/tag-paren-orphans')
 
-const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data = false) => {
+const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data = false, no_alt = false) => {
   // tag explicit refs and initialize data object
   let all_data = files.map(file => {
     log(chalk.dim('[1/4]') + ' Tagging explicit refs: ' + file)
@@ -78,17 +78,19 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
   console.log(chalk.dim('[ ') + chalk.green('✔︎') + chalk.dim(' ] ') + 'Tagged remaining orphans')
 
   // id and tag all possible ref alternatives
-  all_data = all_data.map(file_data => {
-    log(chalk.dim('[4/4]') + ' Identifying alternate refs: ' + file_data.name)
+  if (!no_alt) {
+    all_data = all_data.map(file_data => {
+      log(chalk.dim('[4/4]') + ' Identifying alternate refs: ' + file_data.name)
 
-    file_data.final_html = identifyAlternatives(file_data.final_html, opts)
-    file_data.final_html = reduceErrors(file_data.final_html, opts)
+      file_data.final_html = identifyAlternatives(file_data.final_html, opts)
+      file_data.final_html = reduceErrors(file_data.final_html, opts)
 
-    log.clear()
-    return file_data
-  })
-  log('')
-  console.log(chalk.dim('[ ') + chalk.green('✔︎') + chalk.dim(' ] ') + 'Identified alternate refs')
+      log.clear()
+      return file_data
+    })
+    log('')
+    console.log(chalk.dim('[ ') + chalk.green('✔︎') + chalk.dim(' ] ') + 'Identified alternate refs')
+  }
 
   // write html back to disk
   all_data.forEach(file_data => fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html))

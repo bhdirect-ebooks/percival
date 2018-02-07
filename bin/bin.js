@@ -39,8 +39,9 @@ const beautify_opts =
   }
 
 const cwd = process.cwd()
-const skip_validate = process.argv.includes('-s')
-const data_save_mode = process.argv.includes('-d')
+const skip_validate = process.argv.includes('-s') || process.argv.includes('--skip')
+const data_save_mode = process.argv.includes('-d') || process.argv.includes('--data')
+const no_alternates_mode = process.argv.includes('-n') || process.argv.includes('--no-alt')
 const continue_mode = process.argv.includes('continue')
 const finish_mode = process.argv.includes('finish')
 
@@ -171,7 +172,7 @@ const parseEpubContent = (text_dir, rc_loc, percy_data_loc) => {
 
       console.log(`${chalk.bold('Locating Bible references in:')} \n${chalk.green(vol_title)}\n`)
 
-      main(text_dir, files, { vers, lang }, data_save_mode)
+      main(text_dir, files, { vers, lang }, data_save_mode, no_alternates_mode)
         .then(all_data => {
           return all_data ?
             fs.outputJsonSync(percy_data_loc, prepReportData(vol_title, all_data, { vers, lang })) :
