@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const { cleanupNameChanges } = require('./lib/utils')
 const deepCopyTagRefs = require('./lib/deep-copy-tag-refs')
 const fs = require('fs-extra')
 const { toJSON, toXHTML } = require('./lib/himalaya-io')
@@ -84,6 +85,7 @@ const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data =
 
       file_data.final_html = identifyAlternatives(file_data.final_html, opts)
       file_data.final_html = reduceErrors(file_data.final_html, opts)
+      file_data.final_html = cleanupNameChanges(file_data.final_html)
 
       log.clear()
       return file_data
