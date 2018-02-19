@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "ava": "^0.22.0",
-    "nyc": "^11.1.0"
+    "nyc": "^11.4.1"
   },
   "dependencies": {
     "bible-passage-reference-parser": "^2.0.1",
