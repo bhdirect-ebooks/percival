@@ -10,6 +10,7 @@ const reduceErrors = require('./lib/reduce-errors')
 const tagLocal = require('./lib/tag-local-orphans')
 const tagInParens = require('./lib/tag-paren-orphans')
 
+
 const main = (text_dir, files, opts = {vers: 'default', lang: 'en'}, save_data = false, no_alt = false) => {
   // tag explicit refs and initialize data object
   let all_data = files.map(file => {
