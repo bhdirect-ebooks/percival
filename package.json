@@ -1,7 +1,7 @@
 {
   "name": "@bhdirect/percival",
-  "version": "1.3.2",
-  "description": "Ref tagger for B&H Direct EPUBs",
+  "version": "1.3.3",
+  "description": "Bible ref tagger for B&H Direct EPUBs",
   "main": "index.js",
   "repository": "github.com/bhdirect/percival",
   "author": "Weston Littrell",
