@@ -240,15 +240,15 @@ Raven.context(function() {
       ? html
       : html
         .replace(
-          /(<a data-cross-ref='{"scripture":"[^"]+")[^}]+(}'>)/g,
+          /(<a data-ref='{"scripture":"[^"]+")[^}]+(}'>)/g,
           '$1$2'
         )
         .replace(
-          /<(?:hr|span) data-cross-context='{"parsing":[^}]+}' ?\/>/g,
+          /<(?:hr|span) data-context='{"parsing":[^}]+}' ?\/>/g,
           ''
         )
         .replace(
-          /<span data-cross-context='{"parsing":[^}]+}'>([^<]*?)<\/span>/g,
+          /<span data-context='{"parsing":[^}]+}'>([^<]*?)<\/span>/g,
           '$1'
         )
   }
@@ -269,7 +269,7 @@ Raven.context(function() {
         ) {
           const percy_html = getPercyHtml(doc, percy_data.blocks, false)
           const ref_array = percy_html.match(
-            /data-cross-ref='{"scripture":[^}]+?}'/g
+            /data-ref='{"scripture":[^}]+?}'/g
           )
           if (ref_array) {
             unconf_count += ref_array.reduce((a, b) => {
