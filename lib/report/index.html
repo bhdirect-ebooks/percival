@@ -19,6 +19,8 @@
   <script>
     const app = Elm.Main.embed(document.getElementById('app'))
 
+    let prev_id = ''
+
     const scrollMyDiv = (id, contain_id, pad) => {
       const el = document.getElementById(id)
       if (el !== null) {
@@ -38,7 +40,9 @@
     })
 
     app.ports.scrollDoc.subscribe(id => {
-      scrollMyDiv(id, 'title-doc', 300)
+      const block_id = id.split('-').slice(0, 4).join('-')
+      if (prev_id !== block_id) scrollMyDiv(id, 'title-doc', 300)
+      prev_id = block_id
     })
 
     app.ports.backtoTop.subscribe(yes => {

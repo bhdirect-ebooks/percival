@@ -127,8 +127,8 @@ const main = (
       log(chalk.dim('[4/4]') + ' Identifying alternate refs: ' + file_data.name)
 
       file_data.final_html = identifyAlternatives(file_data.final_html, opts)
-      file_data.final_html = reduceErrors(file_data.final_html, opts)
       file_data.final_html = cleanupNameChanges(file_data.final_html)
+      file_data.final_html = reduceErrors(file_data.final_html, opts)
 
       log.clear()
       return file_data
