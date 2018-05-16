@@ -93,35 +93,35 @@ Raven.context(function() {
 
   const getVersification = translation => {
     switch (translation) {
-    case 'CSB/HCSB, ESV, AMP, NASB, etc.':
-      return 'default'
-    case 'CEB':
-      return 'ceb'
-    case 'KJV/NKJV or NIV':
-      return 'kjv'
-    case 'NAB or LXX':
-      return 'nab'
-    case 'NLT or NCV':
-      return 'nlt'
-    case 'NRSV':
-      return 'nrsv'
-    case 'Vulgate':
-      return 'vulgate'
-    default:
-      return 'default'
+      case 'CSB/HCSB, ESV, AMP, NASB, etc.':
+        return 'default'
+      case 'CEB':
+        return 'ceb'
+      case 'KJV/NKJV or NIV':
+        return 'kjv'
+      case 'NAB or LXX':
+        return 'nab'
+      case 'NLT or NCV':
+        return 'nlt'
+      case 'NRSV':
+        return 'nrsv'
+      case 'Vulgate':
+        return 'vulgate'
+      default:
+        return 'default'
     }
   }
 
   const getLang = language => {
     switch (language) {
-    case 'English':
-      return 'en'
-    case 'Spanish':
-      return 'es'
-    case 'Portuguese':
-      return 'pt'
-    default:
-      return 'en'
+      case 'English':
+        return 'en'
+      case 'Spanish':
+        return 'es'
+      case 'Portuguese':
+        return 'pt'
+      default:
+        return 'en'
     }
   }
 
@@ -213,9 +213,9 @@ Raven.context(function() {
       ).then(all_data => {
         return all_data
           ? fs.outputJsonSync(
-            percy_data_loc,
-            prepReportData(vol_title, all_data, { vers, lang })
-          )
+              percy_data_loc,
+              prepReportData(vol_title, all_data, { vers, lang })
+            )
           : Promise.resolve()
       })
     })
@@ -239,18 +239,12 @@ Raven.context(function() {
     return !remove_data
       ? html
       : html
-        .replace(
-          /(<a data-ref='{"scripture":"[^"]+")[^}]+(}'>)/g,
-          '$1$2'
-        )
-        .replace(
-          /<(?:hr|span) data-context='{"parsing":[^}]+}' ?\/>/g,
-          ''
-        )
-        .replace(
-          /<span data-context='{"parsing":[^}]+}'>([^<]*?)<\/span>/g,
-          '$1'
-        )
+          .replace(/(<a data-ref='{"scripture":"[^"]+")[^}]+(}'>)/g, '$1$2')
+          .replace(/<(?:hr|span) data-context='{"parsing":[^}]+}' ?\/>/g, '')
+          .replace(
+            /<span data-context='{"parsing":[^}]+}'>([^<]*?)<\/span>/g,
+            '$1'
+          )
   }
   const getNewHtml = (orig_html, percy_html, regex) =>
     orig_html.replace(regex, (match, cg1, cg2) => cg1.concat(percy_html, cg2))
@@ -268,9 +262,7 @@ Raven.context(function() {
           percy_data.fs_docs[doc].name
         ) {
           const percy_html = getPercyHtml(doc, percy_data.blocks, false)
-          const ref_array = percy_html.match(
-            /data-ref='{"scripture":[^}]+?}'/g
-          )
+          const ref_array = percy_html.match(/data-ref='{"scripture":[^}]+?}'/g)
           if (ref_array) {
             unconf_count += ref_array.reduce((a, b) => {
               return b.includes('"confirmed":true') ? a : a + 1

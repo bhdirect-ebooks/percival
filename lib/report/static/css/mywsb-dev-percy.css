@@ -26,7 +26,7 @@ FONT FAMILY GROUPS Docs: http://tachyons.io/docs/typography/font-family/
 */
 .blocks { line-height: 1.15;  -ms-text-size-adjust: 100%;  -webkit-text-size-adjust: 100%;  }
 .blocks { font: normal normal 100% georgia, times, serif; margin: 0 2rem; }
-.blocks p { line-height: 1.5; font-size: 1em; margin: 0; text-align: left; text-indent: 0; padding-top: 0.5rem; }
+.blocks p { line-height: 1.5; font-size: 1rem; margin: 0; text-align: left; text-indent: 0; padding-top: 0.5rem; }
 .blocks li { line-height: 1.5; font-size: 1rem; margin: 0; text-align: left; text-indent: 0; }
 @media screen and (min-width: 30em) { .blocks p, .blocks li { text-align: justify; } }
 .blocks article, .blocks aside, .blocks footer, .blocks header, .blocks nav, .blocks section { display: block; }
