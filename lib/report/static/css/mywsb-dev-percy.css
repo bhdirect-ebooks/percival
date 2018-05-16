@@ -2002,10 +2002,14 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .b .b { font-weight: normal; }
 .i .i { font-style: normal; }
 .blocks dl:not(.abbr-list) dfn span[lang], .blocks dl:not(.abbr-list) dfn span[trans] { font: inherit; }
+.ref {
+  margin: 0 2px;
+}
 .ref:hover,
 .ref--selected {
-border: 2px dashed;
-font-weight: bolder;
+  margin: 0;
+  border: 2px dashed;
+  font-weight: bolder;
 }
 .ref:hover,
 .nav-link,
