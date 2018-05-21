@@ -21,8 +21,19 @@
 
     let prev_id = ''
 
-    const scrollMyDiv = (id, contain_id, pad) => {
+    const elementIsInViewport = el => {
+      var rect = el.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+      )
+    }
+
+    const scrollMyDiv = (id, contain_id, pad, block_id) => {
       const el = document.getElementById(id)
+      const proceed = contain_id === 'title-doc'
+        ? (prev_id !== block_id || elementIsInViewport(el))
+        : true
       if (el !== null) {
         const div = document.getElementById(contain_id)
         const bottom_bit = div.scrollHeight - div.offsetHeight
@@ -41,7 +52,7 @@
 
     app.ports.scrollDoc.subscribe(id => {
       const block_id = id.split('-').slice(0, 4).join('-')
-      if (prev_id !== block_id) scrollMyDiv(id, 'title-doc', 300)
+      scrollMyDiv(id, 'title-doc', 300, block_id)
       prev_id = block_id
     })
 
