@@ -216,7 +216,7 @@ IMAGES Docs: http://tachyons.io/docs/elements/images/
 .blocks .ded2 .italic, .blocks .ded2 .i { font-style: normal; }
 .blocks .sig { margin-bottom: 1rem; margin-left: 16rem; text-align: left; text-indent: 0; }
 .blocks .verse { font-size: 0.875em; font-weight: bold; }
-.blocks .versenum { font-size: 0.75em; line-height: 0; position: relative; top: 0.3em; vertical-align: baseline; margin-right: 0.25rem; font-weight: bold; }
+.blocks .versenum, .blocks .nonversenum { font-size: 0.75em; line-height: 0; position: relative; top: -0.4em; vertical-align: baseline; margin-right: 0.15rem; font-weight: bold; }
 .blocks .selah { padding-left: 16rem; font-style: italic; }
 .blocks .bookname { font: normal 500 2.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 2rem 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: center; }
 .blocks .versenum::after { content: "\00a0"; }
