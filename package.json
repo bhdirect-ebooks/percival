@@ -1,6 +1,6 @@
 {
   "name": "@bhdirect/percival",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Bible ref tagger for B&H Direct EPUBs",
   "main": "index.js",
   "repository": "github.com/bhdirect/percival",

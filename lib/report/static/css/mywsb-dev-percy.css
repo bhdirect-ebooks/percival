@@ -1,80 +1,72 @@
 @charset "UTF-8";
 /*!*
-* MyWSB CSS VERSION: 2018-05-01 | EPUB | Development
-* TACHYONS is copyright (c) 2015 @mrmrs (mrmrs.io) and
-* used in accordance with an MIT License (OSI).
-*/
+ * VERSION: 2018-06-13 | EPUB | Development
+ * TACHYONS is copyright (c) 2015 @mrmrs (mrmrs.io) and
+ * used in accordance with an MIT License (OSI).
+ */
 @namespace epub "http://www.idpf.org/2007/ops";
-/*!*
-* See META-INF/FONT_LICENSES in this EPUB package
-* for Font Software license information.
-*/
+
 @font-face { font-family: "wsextra"; src: url("../fonts/wsextra.otf"); src: url("../fonts/wsextra.otf?#iefix") format("opentype"); font-style: normal; font-weight: normal; }
 @font-face { font-family: "gentium plus"; src: url("../fonts/GentiumPlus-R.woff"); src: url("../fonts/GentiumPlus-R.woff?#iefix") format("woff"); font-style: normal; font-weight: normal; }
 @font-face { font-family: "gentium plus"; src: url("../fonts/GentiumPlus-I.woff"); src: url("../fonts/GentiumPlus-I.woff?#iefix") format("woff"); font-style: italic; font-weight: normal; }
 @font-face { font-family: "ezra sil"; src: url("../fonts/SILEOT.woff"); src: url("../fonts/SILEOT.woff?#iefix") format("woff"); font-style: normal; font-weight: normal; }
-/*
-FONT FAMILY GROUPS Docs: http://tachyons.io/docs/typography/font-family/
-*/
 .sans-serif { font-family: -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; }
 .serif { font-family: georgia, times, serif; }
 .wsextra { font-family: "wsextra"; }
 .gentiumplus { font-family: "gentium plus"; }
 .ezra { font-family: "ezra sil"; }
-/*! Heavily-modified version of normalize.css v7.0.0
-* | MIT License | github.com/necolas/normalize.css
-*/
-.blocks { line-height: 1.15;  -ms-text-size-adjust: 100%;  -webkit-text-size-adjust: 100%;  }
+.blocks { line-height: 1.15; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
 .blocks { font: normal normal 100% georgia, times, serif; margin: 0 2rem; }
-.blocks p { line-height: 1.5; font-size: 1rem; margin: 0; text-align: left; text-indent: 0; padding-top: 0.75rem; }
-.blocks li { line-height: 1.5; font-size: 1rem; margin: 0; text-align: left; text-indent: 0; }
+.blocks p { line-height: 1.5; font-size: 1em; margin: 0; text-align: left; text-indent: 0; padding-top: 0.75rem; }
+.blocks li { line-height: 1.5; font-size: 1em; margin: 0; text-align: left; text-indent: 0; }
 @media screen and (min-width: 30em) { .blocks p, .blocks li { text-align: justify; } }
 .blocks article, .blocks aside, .blocks footer, .blocks header, .blocks nav, .blocks section { display: block; }
 .blocks h1 { font-size: 2em; margin: 0.67em 0; }
-.blocks figcaption, .blocks figure, .blocks main {  display: block; }
+.blocks figcaption, .blocks figure, .blocks main { display: block; }
 .blocks figure { margin: 1em 40px; text-align: center; }
-.blocks hr { box-sizing: content-box;  height: 0;  display: none; }
-.blocks pre { font-family: monospace, monospace;  font-size: 1em;  }
-.blocks a { background-color: transparent;  color: #357edd; -webkit-text-decoration-skip: objects;  text-decoration: none; }
-.blocks abbr[title] { border-bottom: none; cursor: help; text-decoration: none; }
+.blocks hr { box-sizing: content-box; height: 0; display: none; }
+.blocks pre { font-family: monospace, monospace; font-size: 1em; }
+.blocks a { background-color: transparent; color: #005994; -webkit-text-decoration-skip: objects; text-decoration: none; font-weight: bold; }
+abbr[title] { border-bottom: none; color: #754500; cursor: help; text-decoration: none; }
 .blocks b, .blocks strong { font-weight: inherit; }
 .blocks b, .blocks strong { font-weight: bolder; }
-.blocks code, .blocks kbd, .blocks samp { font-family: monospace, monospace;  font-size: 1em;  }
-.blocks dfn { font-style: italic; }
+.blocks code, .blocks kbd, .blocks samp { font-family: monospace, monospace; font-size: 1em; }
 .blocks mark { background-color: #ff0; color: #000; }
 .blocks small { font-size: 80%; }
 .blocks sub { font-size: 0.75em; line-height: 0; position: relative; top: 0.3em; vertical-align: baseline; }
 .blocks sup { font-size: 0.75em; line-height: 0; position: relative; top: -0.3em; vertical-align: baseline; }
 .blocks audio, .blocks video { display: inline-block; }
 .blocks audio:not([controls]) { display: none; height: 0; }
-.blocks img { border-style: none; width: 100%; }
 .blocks svg:not(:root) { overflow: hidden; }
 .blocks ol, .blocks ul { -webkit-padding-start: 0; }
-.blocks button, .blocks input, .blocks optgroup, .blocks select, .blocks textarea { font-family: sans-serif;  font-size: 100%;  line-height: 1.15;  margin: 0;  }
-.blocks button, .blocks input {  overflow: visible; }
-.blocks button, .blocks select {  text-transform: none; }
-.blocks button, [type="button"], [type="reset"], [type="submit"] { -webkit-appearance: button;  }
-.blocks button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-moz-focus-inner, [type="submit"]::-moz-focus-inner { border-style: none; padding: 0; }
-.blocks button:-moz-focusring, [type="button"]:-moz-focusring, [type="reset"]:-moz-focusring, [type="submit"]:-moz-focusring { outline: 1px dotted ButtonText; }
+.blocks button, .blocks input, .blocks optgroup, .blocks select, .blocks textarea { font-family: sans-serif; font-size: 100%; line-height: 1.15; margin: 0; }
+.blocks button, .blocks input { overflow: visible; }
+.blocks button, .blocks select { text-transform: none; }
+.blocks button, [type=button], [type=reset], [type=submit] { -webkit-appearance: button; }
+.blocks button::-moz-focus-inner, [type=button]::-moz-focus-inner, [type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner { border-style: none; padding: 0; }
+.blocks button:-moz-focusring, [type=button]:-moz-focusring, [type=reset]:-moz-focusring, [type=submit]:-moz-focusring { outline: 1px dotted ButtonText; }
 .blocks fieldset { padding: 0.35em 0.75em 0.625em; }
-.blocks legend { box-sizing: border-box;  color: inherit;  display: table;  max-width: 100%;  padding: 0;  white-space: normal;  }
-.blocks progress { display: inline-block;  vertical-align: baseline;  }
+.blocks legend { box-sizing: border-box; color: inherit; display: table; max-width: 100%; padding: 0; white-space: normal; }
+.blocks progress { display: inline-block; vertical-align: baseline; }
 .blocks textarea { overflow: auto; }
-[type="checkbox"], [type="radio"] { box-sizing: border-box;  padding: 0;  }
-[type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button { height: auto; }
-[type="search"] { -webkit-appearance: textfield;  outline-offset: -2px;  }
-[type="search"]::-webkit-search-cancel-button, [type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
-::-webkit-file-upload-button { -webkit-appearance: button;  font: inherit;  }
+[type=checkbox], [type=radio] { box-sizing: border-box; padding: 0; }
+[type=number]::-webkit-inner-spin-button, [type=number]::-webkit-outer-spin-button { height: auto; }
+[type=search] { -webkit-appearance: textfield; outline-offset: -2px; }
+[type=search]::-webkit-search-cancel-button, [type=search]::-webkit-search-decoration { -webkit-appearance: none; }
+::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; }
 .blocks details, .blocks menu { display: block; }
 .blocks summary { display: list-item; }
 .blocks canvas { display: inline-block; }
 .blocks template { display: none; }
 [hidden] { display: none; }
-/*
-IMAGES Docs: http://tachyons.io/docs/elements/images/
-*/
 .blocks img { max-width: 100%; }
-.blocks html, .blocks body, .blocks div, .blocks article, .blocks section, .blocks main, .blocks footer, .blocks header, .blocks form, .blocks fieldset, .blocks legend, .blocks pre, .blocks code, .blocks a, .blocks h1, .blocks h2, .blocks h3, .blocks h4, .blocks h5, .blocks h6, .blocks p, .blocks ul, .blocks ol, .blocks li, .blocks dl, .blocks dt, .blocks dd, .blocks textarea, .blocks table, .blocks td, .blocks th, .blocks tr, .blocks input[type="email"], .blocks input[type="number"], .blocks input[type="password"], .blocks input[type="tel"], .blocks input[type="text"], .blocks input[type="url"], .border-box { box-sizing: border-box; }
+.blocks html, .blocks body, .blocks div, .blocks article, .blocks section, .blocks main, .blocks footer, .blocks header, .blocks form, .blocks fieldset, .blocks legend, .blocks pre, .blocks code, .blocks a, .blocks h1, .blocks h2, .blocks h3, .blocks h4, .blocks h5, .blocks h6, .blocks p, .blocks ul, .blocks ol, .blocks li, .blocks dl, .blocks dt, .blocks dd, .blocks textarea, .blocks table, .blocks td, .blocks th, .blocks tr, .blocks input[type=email], .blocks input[type=number], .blocks input[type=password], .blocks input[type=tel], .blocks input[type=text], .blocks input[type=url], .blocks .border-box { box-sizing: border-box; }
+section[epub|type~=copyright-page], section[epub\:type~=copyright-page] { margin: 1rem 4rem; }
+section[epub|type~=cover] img, section[epub\:type~=cover] img, section[epub|type~=titlepage] img, section[epub\:type~=titlepage] img { display: block; margin: 0 auto 2rem auto; max-width: 555px; }
+section[epub|type~=index-group] ul, section[epub\:type~=index-group] ul { list-style-type: none; padding: 0 4rem; text-indent: -1.5rem; }
+.blocks nav ol { list-style-type: none; margin-bottom: 0.5rem; }
+.blocks nav ol > li:first-child { margin-top: 0.5rem; }
+nav[epub|type~=page-list], nav[epub\:type~=page-list] { display: none; }
 .blocks h1 { font: normal 500 2.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 2rem 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: center; }
 .blocks h2, .blocks .h2 { font: normal 500 1.5em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 2rem 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: center; }
 .blocks h3, .blocks .h3 { font: normal 500 1.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 2rem 0 0.5rem 0; clear: both; display: block; text-indent: 0; text-align: left; }
@@ -86,11 +78,10 @@ IMAGES Docs: http://tachyons.io/docs/elements/images/
 .blocks .h3sub { font: italic 500 1.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; color: #555; margin: -0.25rem 0 0.5rem 0; clear: both; display: block; text-indent: 0; text-align: left; }
 .blocks .bh { font: normal 500 1.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 0 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: center; }
 .blocks .label { display: block; color: gray; font-variant: small-caps; font-weight: 300; font-size: 1.5em; margin: 1rem 0 0.5rem 0; }
-.blocks p[epub|type~="bridgehead"], .blocks p[epub\:type~="bridgehead"] { font: normal 500 1.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 0 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: center; }
-.blocks a[data-cross-ref] { border-bottom: 1px dashed #000; color: #000; margin-bottom: -1px; }
-.blocks span[data-cross-context~="scripture"], .blocks .versemode { display: none !important; }
+p[epub|type~=bridgehead], p[epub\:type~=bridgehead] { font: normal 500 1.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 0 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: center; }
+a[data-ref] { border-bottom: 1px dashed #000; color: #000; margin-bottom: -1px; }
+span[data-context~=scripture], .versemode { display: none !important; }
 .blocks aside { border: 1px solid #777; margin: 2rem 0; padding: 1rem 2rem 1.75rem 2rem; }
-.blocks aside p { margin: 0; text-indent: 0; }
 .blocks aside blockquote { border: none !important; }
 .blocks aside ol, .blocks aside ul { padding-left: 2rem; }
 .blocks aside .bh { border-bottom: 1px solid #999; margin: 0 0 0.5rem 0; padding: 0 0 0.25rem 0; }
@@ -98,16 +89,14 @@ IMAGES Docs: http://tachyons.io/docs/elements/images/
 .blocks .full-width img, .blocks .float-right img, .blocks .float-left img { margin: 0 auto; }
 @media screen and (min-width: 30em) { .blocks .full-width { max-width: 90%; width: 90%; }
 .blocks .float-right { float: right; margin: 0.5rem 1rem; max-width: 16rem; width: 16rem; }
-.blocks .float-left { float: left; margin: 0.5rem 1rem; max-width: 16rem; width: 16rem; }
-}
+.blocks .float-left { float: left; margin: 0.5rem 1rem; max-width: 16rem; width: 16rem; } }
 .blocks figcaption { font-size: 0.75em; font-style: italic; font-weight: normal; text-align: center; text-indent: 0; }
 .blocks figcaption .italic, .blocks figcaption .i { font-style: normal; }
 .blocks ol { margin: 1rem 0 1rem 0; padding: 0 0 0 4rem; }
 .blocks ol ul, .blocks ol ol { margin: 0; padding: 0 0 0 2rem; }
 .blocks ul { margin: 1rem 0 1rem 0; padding: 0 0 0 4rem; }
 .blocks ul ul, .blocks ul ol { margin: 0; padding: 0 0 0 2rem; }
-.blocks li { padding: 0.5rem 0 0 0; }
-.blocks li p { text-indent: 0; }
+.blocks li { padding: 0.75rem 0 0 0; }
 .blocks .none { list-style-type: none; padding: 0 0 0 3em; }
 .blocks .none ul:not(.none) li, .blocks .none ol:not(.none) li { text-indent: 0; }
 .blocks .upper-roman { list-style-type: upper-roman; }
@@ -120,6 +109,9 @@ IMAGES Docs: http://tachyons.io/docs/elements/images/
 .blocks .disc { list-style-type: disc; }
 .blocks .circle { list-style-type: circle; }
 .blocks .square { list-style-type: square; }
+.blocks .ballot { counter-reset: list; list-style-type: none; }
+.blocks .ballot > li { position: relative; text-indent: -1rem; }
+.blocks .ballot > li:before { content: "☐"; left: -0.4rem; position: relative; }
 .blocks ol:not(.none) li { padding-left: 0.25rem; }
 .blocks .paren { counter-reset: list; list-style-type: none; }
 .blocks .paren > li { left: 0.15rem; position: relative; text-indent: -1.15rem; }
@@ -127,32 +119,31 @@ IMAGES Docs: http://tachyons.io/docs/elements/images/
 .blocks .right-paren { counter-reset: list; list-style-type: none; }
 .blocks .right-paren > li { left: 0; position: relative; text-indent: -0.75rem; }
 .blocks .right-paren > li:before { left: -0.4rem; counter-increment: list; position: relative; }
-.blocks .hebrew.paren > li:before { content: "(" counter(list,hebrew) ")"; }
-.blocks .digit.paren > li:before { content: "(" counter(list,decimal) ")"; }
-.blocks .lower-greek.paren > li:before { content: "(" counter(list,lower-greek) ")"; }
-.blocks .lower-alpha.paren > li:before { content: "(" counter(list,lower-alpha) ")"; }
-.blocks .lower-roman.paren > li:before { content: "(" counter(list,lower-roman) ")"; }
-.blocks .upper-alpha.paren > li:before { content: "(" counter(list,upper-alpha) ")"; }
-.blocks .upper-roman.paren > li:before { content: "(" counter(list,upper-roman) ")"; }
-.blocks .hebrew.right-paren > li:before { content: counter(list,hebrew) ")"; }
-.blocks .digit.right-paren > li:before { content: counter(list,decimal) ")"; }
-.blocks .lower-greek.right-paren > li:before { content: counter(list,lower-greek) ")"; }
-.blocks .lower-alpha.right-paren > li:before { content: counter(list,lower-alpha) ")"; }
-.blocks .lower-roman.right-paren > li:before { content: counter(list,lower-roman) ")"; }
-.blocks .upper-alpha.right-paren > li:before { content: counter(list,upper-alpha) ")"; }
-.blocks .upper-roman.right-paren > li:before { content: counter(list,upper-roman) ")"; }
+.blocks .hebrew.paren > li:before { content: "(" counter(list, hebrew) ")"; }
+.blocks .digit.paren > li:before { content: "(" counter(list, decimal) ")"; }
+.blocks .lower-greek.paren > li:before { content: "(" counter(list, lower-greek) ")"; }
+.blocks .lower-alpha.paren > li:before { content: "(" counter(list, lower-alpha) ")"; }
+.blocks .lower-roman.paren > li:before { content: "(" counter(list, lower-roman) ")"; }
+.blocks .upper-alpha.paren > li:before { content: "(" counter(list, upper-alpha) ")"; }
+.blocks .upper-roman.paren > li:before { content: "(" counter(list, upper-roman) ")"; }
+.blocks .hebrew.right-paren > li:before { content: counter(list, hebrew) ")"; }
+.blocks .digit.right-paren > li:before { content: counter(list, decimal) ")"; }
+.blocks .lower-greek.right-paren > li:before { content: counter(list, lower-greek) ")"; }
+.blocks .lower-alpha.right-paren > li:before { content: counter(list, lower-alpha) ")"; }
+.blocks .lower-roman.right-paren > li:before { content: counter(list, lower-roman) ")"; }
+.blocks .upper-alpha.right-paren > li:before { content: counter(list, upper-alpha) ")"; }
+.blocks .upper-roman.right-paren > li:before { content: counter(list, upper-roman) ")"; }
 .blocks dt { clear: both; padding: 0 0 1rem 0; text-align: left; }
 .blocks dt dfn { font: normal bold 0.95em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; line-height: 1.5; }
 .blocks dd { margin: 0; padding: 0 0 2rem 0; }
-.blocks dd p { text-indent: 0; }
 .blocks .abbr-list { padding: 0 0 0 1.5rem; }
 .blocks .abbr-list dt { clear: left; float: left; padding: 0; text-align: left; width: 20%; }
-.blocks .abbr-list dt dfn { font: normal normal 0.95em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; }
+.blocks .abbr-list dt dfn { font: normal normal 0.95em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; line-height: 1.5; }
 .blocks .abbr-list dd { float: left; padding: 0 0.25rem; width: 75%; }
 .blocks .abbr-list:after { clear: both; content: ""; display: table; }
 .blocks .table { max-width: 100%; width: 100%; overflow: auto; }
 .blocks .bdr { border: 1px solid #ccc; }
-.blocks .bdr td, .bdr th { border: 1px solid #ccc; }
+.blocks .bdr td, .blocks .bdr th { border: 1px solid #ccc; }
 .blocks table { border-collapse: collapse; font-size: 1em; margin: 2rem auto; text-align: left; width: 100%; }
 .blocks th { line-height: 1.5; font-size: 1em; padding: 0.5rem; text-align: center; }
 .blocks td { line-height: 1.5; font-size: 1em; padding: 0.5rem; vertical-align: top; }
@@ -162,35 +153,37 @@ IMAGES Docs: http://tachyons.io/docs/elements/images/
 .blocks blockquote { border-left: 1px dotted #000; margin-bottom: 0.75rem; margin-top: 1.25rem; padding-left: 1rem; }
 .blocks blockquote p { margin: 0.5rem 0; padding-top: 0; text-indent: 0; }
 .blocks .scriptext { border: none !important; font-size: 1em; font-style: italic; margin: 1rem 2rem; padding: 0; }
-.blocks .scriptext .italic, .scriptext .i { font-style: normal; }
-.blocks .pull-center, .blocks .pull-left, .blocks .pull-right { border: none !important; font-size: 0.75em; letter-spacing: 0.15rem; margin: 2rem auto; max-width: 70%; padding: 0; width: 70%; text-transform: uppercase; display: block; float: none; text-align: center; }
-.blocks .pull-center p, .blocks .pull-left p, .blocks .pull-right p { text-indent: 0; text-align: left; }
+.blocks .scriptext .italic, .blocks .scriptext .i { font-style: normal; }
+.blocks .epigraph { border: none !important; font-size: 1em; margin: 1rem 0; padding: 0; }
+.blocks .epigraph p, .blocks .epigraph .sig { margin: 0.5rem 0; text-align: center; }
+.blocks .pull-center, .blocks .pull-left, .blocks .pull-right { border: none !important; letter-spacing: 0.15rem; margin: 2rem auto; max-width: 70%; padding: 0; width: 70%; text-transform: uppercase; display: block; float: none; text-align: center; }
+.blocks .pull-center p, .blocks .pull-left p, .blocks .pull-right p { font-size: 0.75em; text-indent: 0; text-align: left; }
 .blocks .pull-center .sig, .blocks .pull-left .sig, .blocks .pull-right .sig { margin-left: 0; text-align: right; }
 @media screen and (min-width: 30em) { .blocks .pull-left { float: left; margin: 2rem; max-width: 30%; width: 30%; }
 .blocks .pull-right { float: right; margin: 2rem; max-width: 30%; width: 30%; } }
 .blocks article { margin: 2rem 0; }
-.blocks article dfn { color: #00449e; display: inline-block; font: 1.5rem; padding: 0 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: left; }
+.blocks article dfn { color: #00449e; font: normal bold 1.5em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; padding: 0 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: left; }
 .blocks footer { border-top: 1px solid #ccc; margin: 2rem 0 0 0; padding: 1rem 0 0 0; }
-.blocks .poetry { margin: 1rem 0 1rem 1.5rem; }
+.blocks .poetry { margin: 0.75rem 0 0 1.5rem; }
 .blocks .poetry .poetry { margin: 0; padding-left: 1.5rem; }
-.blocks .poetry p { margin-left: 1.5rem; text-indent: -1.5rem; }
-.blocks .poem1 { margin: 0 0 0 2rem; text-indent: -0.5rem; }
-.blocks .poem2 { margin: 0 0 0 3rem; text-indent: -0.5rem; }
-.blocks .poem3 { margin: 0 0 0 4rem; text-indent: -0.5rem; }
-.blocks .poem4 { margin: 0 0 0 5rem; text-indent: -0.5rem; }
-.blocks .poem5 { margin: 0 0 0 6rem; text-indent: -0.5rem; }
-.blocks .poem6 { margin: 0 0 0 7rem; text-indent: -0.5rem; }
-.blocks .poem7 { margin: 0 0 0 8rem; text-indent: -0.5rem; }
-.blocks .poem8 { margin: 0 0 0 9rem; text-indent: -0.5rem; }
-.blocks .poem9 { margin: 0 0 0 10rem; text-indent: -0.5rem; }
-.blocks .poem10 { margin: 0 0 0 11rem; text-indent: -0.5rem; }
-.blocks span[epub|type~=index-term], .blocks span[epub\:type~=index-term] { padding: 0 0.25rem 0 0; }
-.blocks div[epub|type~=footnote] p, .blocks div[epub\:type~=footnote] p { margin-left: 2rem; text-align: left; text-indent: -2rem; }
+.blocks .poetry p { margin-left: 1.5rem; padding-top: 0.25rem; text-indent: -1.5rem; }
+.blocks .poem1 { margin: 0 0 0 3rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem2 { margin: 0 0 0 4.5rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem3 { margin: 0 0 0 6rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem4 { margin: 0 0 0 7.5rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem5 { margin: 0 0 0 9rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem6 { margin: 0 0 0 10.5rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem7 { margin: 0 0 0 12rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem8 { margin: 0 0 0 13.5rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem9 { margin: 0 0 0 15rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+.blocks .poem10 { margin: 0 0 0 16.5rem; text-indent: -1.5rem; padding-top: 0.25rem; }
+span[epub|type~=index-term], span[epub\:type~=index-term] { padding: 0 0.25rem 0 0; }
+div[epub|type~=footnote] p, div[epub\:type~=footnote] p { margin-left: 2rem; text-align: left; text-indent: -2rem; }
 .blocks .br-before { padding-top: 2rem; }
 .blocks .center { text-align: center !important; text-indent: 0; }
 .blocks .left { text-align: left !important; }
 .blocks .hang { margin-left: 1.5rem; text-indent: -1.5rem; }
-.blocks .noind { text-indent: 0; }
+.blocks .noind, .blocks .nopad { padding-top: 0; }
 .blocks .right { text-align: right !important; text-indent: 0; }
 .blocks .ind1 { padding-left: 1.5rem; }
 .blocks .ind2 { padding-left: 3rem; }
@@ -216,20 +209,15 @@ IMAGES Docs: http://tachyons.io/docs/elements/images/
 .blocks .ded2 .italic, .blocks .ded2 .i { font-style: normal; }
 .blocks .sig { margin-bottom: 1rem; margin-left: 16rem; text-align: left; text-indent: 0; }
 .blocks .verse { font-size: 0.875em; font-weight: bold; }
-.blocks .versenum, .blocks .nonversenum { font-size: 0.75em; line-height: 0; position: relative; top: -0.4em; vertical-align: baseline; margin-right: 0.15rem; font-weight: bold; }
+.blocks .versenum, .blocks .nonversenum { font-size: 0.75em; line-height: 0; position: relative; top: -0.4em; vertical-align: baseline; margin-right: 0.15em; font-weight: bold; }
 .blocks .selah { padding-left: 16rem; font-style: italic; }
 .blocks .bookname { font: normal 500 2.25em -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; margin: 2rem 0 1rem 0; clear: both; display: block; text-indent: 0; text-align: center; }
-.blocks .versenum::after { content: "\00a0"; }
-.blocks .lang, .blocks .translit {  font-family: "gentium plus", serif; font-style: italic; }
+.blocks .versenum::after, .blocks .nonversenum::after { content: " "; }
+.blocks .lang, .blocks .translit { font-family: "gentium plus", serif; font-style: italic; }
 .blocks .lang .italic, .blocks .lang .i, .blocks .translit .italic, .blocks .translit .i { font-style: normal; }
-.blocks .lang-grc {  font-family: "gentium plus", serif; }
-.blocks .lang-hbo {  font-family: "ezra sil"; }
-/*
-BORDERS Docs: http://tachyons.io/docs/themes/borders/
-Base: b = border
-Modifiers: a = all t = top r = right b = bottom l = left n = none
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
+.blocks .lang-grc { font-family: "gentium plus", serif; }
+.blocks .lang-hbo { font-family: "ezra sil"; }
+/* Tachyons */
 .ba { border-style: solid; border-width: 1px; }
 .bt { border-top-style: solid; border-top-width: 1px; }
 .br { border-right-style: solid; border-right-width: 1px; }
@@ -254,13 +242,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .bb-l { border-bottom-style: solid; border-bottom-width: 1px; }
 .bl-l { border-left-style: solid; border-left-width: 1px; }
 .bn-l { border-style: none; border-width: 0; } }
-/*
-BORDER COLORS Docs: http://tachyons.io/docs/themes/borders/
-Border colors can be used to extend the base border classes ba,bt,bb,br,bl found in the _borders.css file.
-The base border class by default will set the color of the border to that of the current text color. These classes are for the cases where you desire for the text and border colors to be different.
-Base: b = border
-Modifiers: --color-name = each color variable name is also a border color name
-*/
 .b--black { border-color: #000; }
 .b--near-black { border-color: #111; }
 .b--dark-gray { border-color: #333; }
@@ -323,13 +304,6 @@ Modifiers: --color-name = each color variable name is also a border color name
 .b--washed-red { border-color: #ffdfdf; }
 .b--transparent { border-color: transparent; }
 .b--inherit { border-color: inherit; }
-/*
-BORDER STYLES Docs: http://tachyons.io/docs/themes/borders/
-Depends on base border module in _borders.css
-Base: b = border-style
-Modifiers: --none   = none --dotted = dotted --dashed = dashed --solid  = solid
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .b--dotted { border-style: dotted; }
 .b--dashed { border-style: dashed; }
 .b--solid { border-style: solid; }
@@ -346,16 +320,10 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .b--dashed-l { border-style: dashed; }
 .b--solid-l { border-style: solid; }
 .b--none-l { border-style: none; } }
-/*
-BORDER WIDTHS Docs: http://tachyons.io/docs/themes/borders/
-Base: bw = border-width
-Modifiers: 0 = 0 width border 1 = 1st step in border-width scale 2 = 2nd step in border-width scale 3 = 3rd step in border-width scale 4 = 4th step in border-width scale 5 = 5th step in border-width scale
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .bw0 { border-width: 0; }
-.bw1 { border-width: .125rem; }
-.bw2 { border-width: .25rem; }
-.bw3 { border-width: .5rem; }
+.bw1 { border-width: 0.125rem; }
+.bw2 { border-width: 0.25rem; }
+.bw3 { border-width: 0.5rem; }
 .bw4 { border-width: 1rem; }
 .bw5 { border-width: 2rem; }
 .bt-0 { border-top-width: 0; }
@@ -363,9 +331,9 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .bb-0 { border-bottom-width: 0; }
 .bl-0 { border-left-width: 0; }
 @media screen and (min-width: 30em) { .bw0-ns { border-width: 0; }
-.bw1-ns { border-width: .125rem; }
-.bw2-ns { border-width: .25rem; }
-.bw3-ns { border-width: .5rem; }
+.bw1-ns { border-width: 0.125rem; }
+.bw2-ns { border-width: 0.25rem; }
+.bw3-ns { border-width: 0.5rem; }
 .bw4-ns { border-width: 1rem; }
 .bw5-ns { border-width: 2rem; }
 .bt-0-ns { border-top-width: 0; }
@@ -373,9 +341,9 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .bb-0-ns { border-bottom-width: 0; }
 .bl-0-ns { border-left-width: 0; } }
 @media screen and (min-width: 30em) and (max-width: 60em) { .bw0-m { border-width: 0; }
-.bw1-m { border-width: .125rem; }
-.bw2-m { border-width: .25rem; }
-.bw3-m { border-width: .5rem; }
+.bw1-m { border-width: 0.125rem; }
+.bw2-m { border-width: 0.25rem; }
+.bw3-m { border-width: 0.5rem; }
 .bw4-m { border-width: 1rem; }
 .bw5-m { border-width: 2rem; }
 .bt-0-m { border-top-width: 0; }
@@ -383,19 +351,15 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .bb-0-m { border-bottom-width: 0; }
 .bl-0-m { border-left-width: 0; } }
 @media screen and (min-width: 60em) { .bw0-l { border-width: 0; }
-.bw1-l { border-width: .125rem; }
-.bw2-l { border-width: .25rem; }
-.bw3-l { border-width: .5rem; }
+.bw1-l { border-width: 0.125rem; }
+.bw2-l { border-width: 0.25rem; }
+.bw3-l { border-width: 0.5rem; }
 .bw4-l { border-width: 1rem; }
 .bw5-l { border-width: 2rem; }
 .bt-0-l { border-top-width: 0; }
 .br-0-l { border-right-width: 0; }
 .bb-0-l { border-bottom-width: 0; }
 .bl-0-l { border-left-width: 0; } }
-/*
-BOX-SHADOW Docs: http://tachyons.io/docs/themes/box-shadow/
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .shadow-1 { box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.2); }
 .shadow-2 { box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2); }
 .shadow-3 { box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2); }
@@ -421,10 +385,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .shadow-3-l { box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2); }
 .shadow-4-l { box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.2); }
 .shadow-5-l { box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2); } }
-/*
-CLEARFIX http://tachyons.io/docs/layout/clearfix/
-*/
-/* Nicolas Gallaghers Clearfix solution Ref: http://nicolasgallagher.com/micro-clearfix-hack/ */
 .cf:before, .cf:after { content: " "; display: table; }
 .cf:after { clear: both; }
 .cl { clear: left; }
@@ -443,12 +403,6 @@ CLEARFIX http://tachyons.io/docs/layout/clearfix/
 .cr-l { clear: right; }
 .cb-l { clear: both; }
 .cn-l { clear: none; } }
-/*
-DISPLAY Docs: http://tachyons.io/docs/layout/display
-Base: d = display
-Modifiers: n     = none b     = block ib    = inline-block it    = inline-table t     = table tc    = table-cell t-row          = table-row t-columm       = table-column t-column-group = table-column-group
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .dn, .nd { display: none; }
 .di { display: inline; }
 .db { display: block; }
@@ -497,14 +451,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .dt-column-l { display: table-column; }
 .dt-column-group-l { display: table-column-group; }
 .dt--fixed-l { table-layout: fixed; width: 100%; } }
-/*
-FLOATS http://tachyons.io/docs/layout/floats/
-1. Floated elements are automatically rendered as block level elements. Setting floats to display inline will fix the double margin bug in ie6. You know... just in case.
-2. Don"t forget to clearfix your floats with .cf
-Base: f = float
-Modifiers: l = left r = right n = none
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .fl { float: left; _display: inline; }
 .fr { float: right; _display: inline; }
 .fnon { float: none; }
@@ -517,18 +463,11 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 @media screen and (min-width: 60em) { .fl-l { float: left; _display: inline; }
 .fr-l { float: right; _display: inline; }
 .fnon-l { float: none; } }
-/*
-FONT FAMILY GROUPS Docs: http://tachyons.io/docs/typography/font-family/
-*/
 .sans-serif { font-family: -apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif; }
 .serif { font-family: georgia, times, serif; }
 .wsextra { font-family: "wsextra"; }
 .gentiumplus { font-family: "gentium plus"; }
 .ezra { font-family: "ezra sil"; }
-/*
-FONT STYLE Docs: http://tachyons.io/docs/typography/font-style/
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .i { font-style: italic; }
 .fs-normal { font-style: normal; }
 @media screen and (min-width: 30em) { .i-ns { font-style: italic; }
@@ -537,12 +476,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .fs-normal-m { font-style: normal; } }
 @media screen and (min-width: 60em) { .i-l { font-style: italic; }
 .fs-normal-l { font-style: normal; } }
-/*
-FONT WEIGHT Docs: http://tachyons.io/docs/typography/font-weight/
-Base fw = font-weight
-Modifiers: 1 = literal value 100 2 = literal value 200 3 = literal value 300 4 = literal value 400 5 = literal value 500 6 = literal value 600 7 = literal value 700 8 = literal value 800 9 = literal value 900
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .normal { font-weight: normal; }
 .b { font-weight: bold; }
 .fw1 { font-weight: 100; }
@@ -587,14 +520,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .fw7-l { font-weight: 700; }
 .fw8-l { font-weight: 800; }
 .fw9-l { font-weight: 900; } }
-/*
-HEIGHTS Docs: http://tachyons.io/docs/layout/heights/
-Base: h = height min-h = min-height min-vh = min-height vertical screen height vh = vertical screen height
-Modifiers 1 = 1st step in height scale 2 = 2nd step in height scale 3 = 3rd step in height scale 4 = 4th step in height scale 5 = 5th step in height scale
--25   = literal value 25% -50   = literal value 50% -75   = literal value 75% -100  = literal value 100%
--auto = string value of auto -inherit = string value of inherit
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .h-25 { height: 25%; }
 .h-50 { height: 50%; }
 .h-75 { height: 75%; }
@@ -658,10 +583,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .min-vh-100-l { min-height: 100vh; }
 .h-auto-l { height: auto; }
 .h-inherit-l { height: inherit; } }
-/*
-LETTER SPACING Docs: http://tachyons.io/docs/typography/tracking/
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .tracked { letter-spacing: 0.1em; }
 .tracked-half { letter-spacing: 0.05em; }
 .tracked-tight { letter-spacing: -0.05em; }
@@ -678,10 +599,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .tracked-half-l { letter-spacing: 0.05em; }
 .tracked-tight-l { letter-spacing: -0.05em; }
 .tracked-mega-l { letter-spacing: 0.25em; } }
-/*
-LINE HEIGHT / LEADING Docs: http://tachyons.io/docs/typography/line-height
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .lh-solid { line-height: 1; }
 .lh-title { line-height: 1.25; }
 .lh-copy { line-height: 1.5; }
@@ -694,14 +611,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 @media screen and (min-width: 60em) { .lh-solid-l { line-height: 1; }
 .lh-title-l { line-height: 1.25; }
 .lh-copy-l { line-height: 1.5; } }
-/*
-MAX WIDTHS Docs: http://tachyons.io/docs/layout/max-widths/
-Base: mw = max-width
-Modifiers 1 = 1st step in width scale 2 = 2nd step in width scale 3 = 3rd step in width scale 4 = 4th step in width scale 5 = 5th step in width scale 6 = 6st step in width scale 7 = 7nd step in width scale 8 = 8rd step in width scale 9 = 9th step in width scale
--100 = literal value 100%
--none  = string value none
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .mw-10 { max-width: 10%; }
 .mw-20 { max-width: 20%; }
 .mw-25 { max-width: 25%; }
@@ -815,14 +724,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .mw8-l { max-width: 64rem; }
 .mw9-l { max-width: 96rem; }
 .mw-none-l { max-width: none; } }
-/*
-WIDTHS Docs: http://tachyons.io/docs/layout/widths/
-Base: w = width
-Modifiers 1 = 1st step in width scale 2 = 2nd step in width scale 3 = 3rd step in width scale 4 = 4th step in width scale 5 = 5th step in width scale
--10  = literal value 10% -20  = literal value 20% -25  = literal value 25% -30  = literal value 30% -33  = literal value 33% -34  = literal value 34% -40  = literal value 40% -50  = literal value 50% -60  = literal value 60% -70  = literal value 70% -75  = literal value 75% -80  = literal value 80% -90  = literal value 90% -100 = literal value 100%
--third      = 100% / 3 (Not supported in opera mini or IE8) -two-thirds = 100% / 1.5 (Not supported in opera mini or IE8) -auto       = string value auto
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .w1 { width: 1rem; }
 .w2 { width: 2rem; }
 .w3 { width: 4rem; }
@@ -963,34 +864,23 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .overflow-y-hidden-l { overflow-y: hidden; }
 .overflow-y-scroll-l { overflow-y: scroll; }
 .overflow-y-auto-l { overflow-y: auto; } }
-/*
-POSITIONING Docs: http://tachyons.io/docs/layout/position/
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .relative { position: relative; }
 @media screen and (min-width: 30em) { .relative-ns { position: relative; } }
 @media screen and (min-width: 30em) and (max-width: 60em) { .relative-m { position: relative; } }
 @media screen and (min-width: 60em) { .relative-l { position: relative; } }
-/*
-OPACITY Docs: http://tachyons.io/docs/themes/opacity/
-*/
 .o-100 { opacity: 1; }
-.o-90 { opacity: .9; }
-.o-80 { opacity: .8; }
-.o-70 { opacity: .7; }
-.o-60 { opacity: .6; }
-.o-50 { opacity: .5; }
-.o-40 { opacity: .4; }
-.o-30 { opacity: .3; }
-.o-20 { opacity: .2; }
-.o-10 { opacity: .1; }
-.o-05 { opacity: .05; }
-.o-025 { opacity: .025; }
+.o-90 { opacity: 0.9; }
+.o-80 { opacity: 0.8; }
+.o-70 { opacity: 0.7; }
+.o-60 { opacity: 0.6; }
+.o-50 { opacity: 0.5; }
+.o-40 { opacity: 0.4; }
+.o-30 { opacity: 0.3; }
+.o-20 { opacity: 0.2; }
+.o-10 { opacity: 0.1; }
+.o-05 { opacity: 0.05; }
+.o-025 { opacity: 0.025; }
 .o-0 { opacity: 0; }
-/*
-SKINS Docs: http://tachyons.io/docs/themes/skins/
-Classes for setting foreground and background colors on elements. If you haven"t declared a border color, but set border on an element, it will be set to the current text color.
-*/
 .black-90 { color: rgba(0, 0, 0, 0.9); }
 .black-80 { color: rgba(0, 0, 0, 0.8); }
 .black-70 { color: rgba(0, 0, 0, 0.7); }
@@ -1215,13 +1105,6 @@ Classes for setting foreground and background colors on elements. If you haven"t
 .hover-bg-washed-yellow:hover, .hover-bg-washed-yellow:focus { background-color: #fffceb; }
 .hover-bg-washed-red:hover, .hover-bg-washed-red:focus { background-color: #ffdfdf; }
 .hover-bg-inherit:hover, .hover-bg-inherit:focus { background-color: inherit; }
-/* SPACING Docs: http://tachyons.io/docs/layout/spacing/
-An eight step powers of two scale ranging from 0 to 16rem.
-Base: p = padding m = margin
-Modifiers: a = all h = horizontal v = vertical t = top r = right b = bottom l = left
-0 = none 1 = 1st step in spacing scale 2 = 2nd step in spacing scale 3 = 3rd step in spacing scale 4 = 4th step in spacing scale 5 = 5th step in spacing scale 6 = 6th step in spacing scale 7 = 7th step in spacing scale
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .pa0 { padding: 0; }
 .pa1 { padding: 0.25rem; }
 .pa2 { padding: 0.5rem; }
@@ -1810,9 +1693,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .nt5-l { margin-top: -4rem; }
 .nt6-l { margin-top: -8rem; }
 .nt7-l { margin-top: -16rem; } }
-/*
-TABLES Docs: http://tachyons.io/docs/elements/tables/
-*/
 .collapse { border-collapse: collapse; border-spacing: 0; }
 .striped--light-silver:nth-child(odd) { background-color: #aaa; }
 .striped--moon-gray:nth-child(odd) { background-color: #ccc; }
@@ -1820,10 +1700,6 @@ TABLES Docs: http://tachyons.io/docs/elements/tables/
 .striped--near-white:nth-child(odd) { background-color: #f4f4f4; }
 .stripe-light:nth-child(odd) { background-color: rgba(255, 255, 255, 0.1); }
 .stripe-dark:nth-child(odd) { background-color: rgba(0, 0, 0, 0.1); }
-/*
-TEXT DECORATION Docs: http://tachyons.io/docs/typography/text-decoration/
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .strike { text-decoration: line-through; }
 .overline { text-decoration: overline; }
 .underline { text-decoration: underline; }
@@ -1840,12 +1716,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .overline-l { text-decoration: overline; }
 .underline-l { text-decoration: underline; }
 .no-underline-l { text-decoration: none; } }
-/*
-TEXT ALIGN Docs: http://tachyons.io/docs/typography/text-align/
-Base t = text-align
-Modifiers l = left r = right c = center j = justify
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .tl { text-align: left; }
 .tr { text-align: right; }
 .tc { text-align: center; }
@@ -1862,12 +1732,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .tr-l { text-align: right; }
 .tc-l { text-align: center; }
 .tj-l { text-align: justify; } }
-/*
-TEXT TRANSFORM Docs: http://tachyons.io/docs/typography/text-transform/
-Base: tt = text-transform
-Modifiers c = capitalize l = lowercase u = uppercase n = none
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .ttc { text-transform: capitalize; }
 .ttl { text-transform: lowercase; }
 .ttu { text-transform: uppercase; }
@@ -1884,13 +1748,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .ttl-l { text-transform: lowercase; }
 .ttu-l { text-transform: uppercase; }
 .ttn-l { text-transform: none; } }
-/*
-TYPE SCALE Docs: http://tachyons.io/docs/typography/scale/
-Base: f = font-size
-Modifiers 1 = 1st step in size scale 2 = 2nd step in size scale 3 = 3rd step in size scale 4 = 4th step in size scale 5 = 5th step in size scale 6 = 6th step in size scale 7 = 7th step in size scale
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
-/* For Hero/Marketing Titles  These generally are too large for mobile so be careful using them on smaller screens. */
 .f-6, .f-headline { font-size: 6rem; }
 .f-5, .f-subheadline { font-size: 5rem; }
 .f1 { font-size: 3em; }
@@ -1927,10 +1784,6 @@ Media Query Extensions: -ns = not-small -m  = medium -l  = large
 .f5-l { font-size: 1em; }
 .f6-l { font-size: 0.875em; }
 .f7-l { font-size: 0.75em; } }
-/*
-TYPOGRAPHY http://tachyons.io/docs/typography/measure/
-Media Query Extensions: -ns = not-small -m  = medium -l  = large
-*/
 .measure { max-width: 30em; }
 .measure-wide { max-width: 34em; }
 .measure-narrow { max-width: 20em; }
