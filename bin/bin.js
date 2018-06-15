@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const beautify = require('js-beautify')
+const { betterify } = require('@bhdirect/betterify')
 const chalk = require('chalk')
 const epubCheck = require('epub-check')
 const fs = require('fs-extra')
@@ -22,26 +22,6 @@ Raven.context(function() {
   process.on('unhandledRejection', err => {
     console.log(err)
   })
-
-  const beautify_opts = {
-    indent_size: 2,
-    indent_char: ' ',
-    indent_with_tabs: false,
-    eol: '\n',
-    end_with_newline: true,
-    indent_level: 0,
-    preserve_newlines: true,
-    max_preserve_newlines: 2,
-    html: {
-      indent_inner_html: true,
-      extra_liners: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-      wrap_line_length: 0,
-    },
-    css: {
-      selector_separator_newline: true,
-      newline_between_rules: true,
-    },
-  }
 
   const cwd = process.cwd()
   const skip_validate =
@@ -305,7 +285,7 @@ Raven.context(function() {
           const new_json = toJSON(new_html)
           fs.outputFileSync(
             path.join(text_dir, file),
-            beautify.html(toXHTML(new_json), beautify_opts)
+            betterify(toXHTML(new_json))
           )
         }
       }
