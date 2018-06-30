@@ -219,10 +219,10 @@ Raven.context(function() {
     return !remove_data
       ? html
       : html
-          .replace(/(<a data-ref='{"scripture":"[^"]+")[^}]+(}'>)/g, '$1$2')
-          .replace(/<(?:hr|span) data-context='{"parsing":[^}]+}' ?\/>/g, '')
+          .replace(/(<a data-ref=)'{"scripture":("[^"]+")[^}]+}'>/g, '$1$2>')
+          .replace(/<(?:hr|span) data-parsing="[^"]*?" ?\/>/g, '')
           .replace(
-            /<span data-context='{"parsing":[^}]+}'>([^<]*?)<\/span>/g,
+            /<span data-parsing=[^>]+>([^<]*?)<\/span>/g,
             '$1'
           )
   }
