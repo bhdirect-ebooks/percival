@@ -5,7 +5,7 @@ const chalk = require('chalk')
 const epubCheck = require('epub-check')
 const fs = require('fs-extra')
 const inquirer = require('inquirer')
-const main = require('../index.js')
+const { main } = require('../index.js')
 const path = require('path')
 const serveReport = require('../lib/report/serve-report')
 const { prepReportData } = require('../lib/report/prep-report-data')
@@ -219,12 +219,9 @@ Raven.context(function() {
     return !remove_data
       ? html
       : html
-          .replace(/(<a data-ref=)'{"scripture":("[^"]+")[^}]+}'>/g, '$1$2>')
+          .replace(/(data-ref="[^"]*?")(?: id="([^"]+)")?/g, '$1')
           .replace(/<(?:hr|span) data-parsing="[^"]*?" ?\/>/g, '')
-          .replace(
-            /<span data-parsing=[^>]+>([^<]*?)<\/span>/g,
-            '$1'
-          )
+          .replace(/<span data-parsing=[^>]+>([^<]*?)<\/span>/g, '$1')
   }
   const getNewHtml = (orig_html, percy_html, regex) =>
     orig_html.replace(regex, (match, cg1, cg2) => cg1.concat(percy_html, cg2))
@@ -241,13 +238,19 @@ Raven.context(function() {
           percy_data.fs_docs.hasOwnProperty(doc) &&
           percy_data.fs_docs[doc].name
         ) {
-          const percy_html = getPercyHtml(doc, percy_data.blocks, false)
-          const ref_array = percy_html.match(/data-ref='{"scripture":[^}]+?}'/g)
-          if (ref_array) {
-            unconf_count += ref_array.reduce((a, b) => {
-              return b.includes('"confirmed":true') ? a : a + 1
-            }, 0)
-          }
+          unconf_count = Object.keys(percy_data.blocks).reduce((a, key) => {
+            const { refs } = percy_data.blocks[key]
+            return (
+              a +
+              Object.keys(refs).reduce((b, k) => {
+                const ref = refs[k]
+                return ref.data.hasOwnProperty('confirmed') &&
+                  ref.data.confirmed
+                  ? b
+                  : b + 1
+              }, 0)
+            )
+          }, 0)
         }
       }
       return unconf_count

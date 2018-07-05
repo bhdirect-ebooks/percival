@@ -11,24 +11,38 @@ const reduceErrors = require('./lib/reduce-errors')
 const tagLocal = require('./lib/tag-local-orphans')
 const tagInParens = require('./lib/tag-paren-orphans')
 
-// doing :: (Number, String, String) -> STDOUT
-const doing = (step, verb, name) =>
-  log(chalk.dim(`[${step}/4]`) + ` ${verb}: ${name}`)
+// R.curry (line 22) takes any function and makes it a curried function, so its
+// useage below takes our 3-arity function that returns 'a' and creates a 1-arity
+// function that returns a 1-arity function that returns a 1-arity function that
+// returns 'a'. This allows us to use partial application, passing in some
+// arguments at one point and more arguments later, not getting only functions
+// in return until all parameters are satisfied.
 
-// done :: String -> STDOUT
-const done = did => {
+// doing :: Number -> String -> a -> a
+const doing = R.curry((step, verb, a) => {
+  const name =
+    typeof a === 'string' ? a : a.hasOwnProperty('name') ? a.name : ''
+  log(chalk.dim(`[${step}/4]`) + ` ${verb}: ${name}`)
+  return a
+})
+
+// done :: a -> a
+const done = a => {
+  log.clear()
+  return a
+}
+
+// doneStep :: (String, a) -> a
+const doneStep = (did, a) => {
   log('')
-  return console.log(
-    `${chalk.dim('[')} ${chalk.green('✔︎')} ${chalk.dim(']')} ${did}`
-  )
+  console.log(`${chalk.dim('[')} ${chalk.green('✔︎')} ${chalk.dim(']')} ${did}`)
+  return a
 }
 
 // initFileDataObj :: (String, Object, String) -> Object
 const initFileDataObj = (file, data, final_html) => {
   return {
-    id: file
-      .toLowerCase()
-      .replace(/^[^_]+(\d\d)_[a-z]+(\d\d\d?)_.*?$/, '$1-$2'),
+    id: file.replace(/^[^_]+(\d\d)_[a-z]+(\d\d\d?)_.*?$/i, '$1-$2'),
     name: file,
     explicit: data,
     in_parens: [],
@@ -42,49 +56,63 @@ const initFileDataObj = (file, data, final_html) => {
 // readFileUtf8 :: String -> String
 const readFileUtf8 = filepath => fs.readFileSync(filepath, { encoding: 'utf8' })
 
-// readHtmlToObject :: (String, String) -> Object
-const readHtmlToObject = R.pipe(
-  path.join,
-  readFileUtf8,
-  toJSON
-)
-
 // tagExplicit :: ([String], String, {k: v}) -> [Object]
 const tagExplicit = (files, text_dir, opts) => {
-  const tag = 
-  const all_data = R.map(file => {
-    doing(1, 'Tagging explicit refs', file)
+  const logDoing = doing(1, 'Tagging explicit refs')
+  const getPath = filename => path.join(text_dir, filename)
+  const explicitRun = obj => deepCopyTagRefs(obj, 'explicit', opts)
 
-    const { tagged, data } = deepCopyTagRefs(
-      readHtmlToObject(text_dir, file),
-      'explicit',
-      opts,
-      log,
-      file
-    )
+  const tagFile = file => {
+    const getDataObj = explicit =>
+      initFileDataObj(file, explicit.data, toXHTML(explicit.tagged))
 
-    log.clear()
-    return initFileDataObj(file, data, toXHTML(tagged))
-  }, files)
-  done('Tagged explicit refs')
+    // R.pipe returns a function that is a pipeline of functions from the first
+    // parameter to the last. The first function can be any arity, but the rest
+    // must have arity of 1. As you would expect, the return of each function is
+    // the argument for the next.
+    return R.pipe(
+      logDoing,
+      getPath,
+      readFileUtf8,
+      toJSON,
+      explicitRun,
+      getDataObj,
+      done
+    )(file) // Immediately invoking the pipeline
+  }
+
+  const all_data = R.map(tagFile, files)
+
+  doneStep('Tagged explicit refs')
   return all_data
 }
 
 // tagParenthetical :: ([Object], {k: v}) -> [Object]
 const tagParenthetical = (all_data, opts) => {
-  const new_all = R.map(file_data => {
-    doing(2, 'Tagging parenthetical orphans', file_data.name)
-
+  const logDoing = doing(2, 'Tagging parenthetical orphans')
+  const parenRun = file_data => {
     const { data, html } = tagInParens(file_data.final_html, opts)
-
-    file_data.in_parens = data
-    file_data.final_html =
+    const final_html =
       data.length > 0 ? reduceErrors(html, opts) : file_data.final_html
 
-    log.clear()
-    return file_data
-  }, all_data)
-  done('Tagged parenthetical orphans')
+    return {
+      ...file_data,
+      in_parens: data,
+      final_html,
+    }
+  }
+
+  const tagFile = file_data => {
+    return R.pipe(
+      logDoing,
+      parenRun,
+      done
+    )(file_data)
+  }
+
+  const new_all = R.map(tagFile, all_data)
+
+  doneStep('Tagged parenthetical orphans')
   return new_all
 }
 
@@ -98,55 +126,79 @@ const remoteContextRun = R.curry((run, opts, file_data) => {
     file_data.name
   )
 
-  file_data[run] = data
-  file_data.final_html =
+  const final_html =
     data.length > 0 ? reduceErrors(toXHTML(tagged), opts) : file_data.final_html
 
-  return file_data
+  return {
+    ...file_data,
+    [run]: data,
+    final_html,
+  }
 })
 
 // tagOrphans :: ([Object], {k: v}) -> [Object]
 const tagOrphans = (all_data, opts) => {
-  const new_all = R.map(file_data => {
-    doing(3, 'Tagging remaining orphans', file_data.name)
-
+  const logDoing = doing(3, 'Tagging remaining orphans')
+  const localRun = file_data => {
     const { data, html } = tagLocal(file_data.final_html, opts)
-
-    file_data.nearby = data
-    file_data.final_html =
+    const final_html =
       data.length > 0 ? reduceErrors(html, opts) : file_data.final_html
 
-    // tagging some orphans provides better context to others, so
-    // we do it twice; more orphans tagged == a better experience
-    file_data = R.pipe(
-      remoteContextRun('with_context', opts),
-      remoteContextRun('second_pass', opts)
-    )(file_data)
+    return {
+      ...file_data,
+      nearby: data,
+      final_html,
+    }
+  }
+  // tagging some orphans provides better context to others, so we do it twice;
+  // more orphans tagged == a better experience
+  const remoteRun1 = remoteContextRun('with_context', opts)
+  const remoteRun2 = remoteContextRun('second_pass', opts)
 
-    log.clear()
-    return file_data
-  }, all_data)
-  done('Tagged remaining orphans')
+  const tagFile = file_data => {
+    return R.pipe(
+      logDoing,
+      localRun,
+      remoteRun1,
+      remoteRun2,
+      done
+    )(file_data)
+  }
+
+  const new_all = R.map(tagFile, all_data)
+
+  doneStep('Tagged remaining orphans')
   return new_all
 }
 
 // tagOrphans :: ([Object], {k: v}, ((((a, {k: v}) -> a), a) -> ((a, {k: v}, fn) -> a)) -> [Object]
-const idAlternates = (all_data, opts, withOpts) => {
+const idAlternates = (all_data, _opts, withOpts) => {
+  const logDoing = doing(4, 'Identifying alternate refs')
+  const idAltsUnary = html => withOpts(identifyAlternatives, html)
   const cleanUpErrors = html => withOpts(reduceErrors, html)
   const doAlts = R.pipe(
-    identifyAlternatives,
+    idAltsUnary,
     cleanupNameChanges,
     cleanUpErrors
   )
-  const new_all = R.map(file_data => {
-    doing(4, 'Identifying alternate refs', file_data.name)
+  const altRun = file_data => {
+    return {
+      ...file_data,
+      final_html: doAlts(file_data.final_html),
+    }
+  }
 
-    file_data.final_html = doAlts(file_data.final_html, opts)
+  const tagFile = file_data => {
+    return R.pipe(
+      logDoing,
+      altRun,
+      done
+    )(file_data)
+  }
 
-    log.clear()
-    return file_data
-  }, all_data)
-  done('Identified alternate refs')
+  const new_all = R.map(tagFile, all_data)
+
+  doneStep('Identified alternate refs')
   return new_all
 }
 
@@ -161,9 +213,6 @@ module.exports.main = (
   const tagParenUnary = data => withOpts(tagParenthetical, data)
   const tagOrphanUnary = data => withOpts(tagOrphans, data)
   const findAltsUnary = data => (no_alt ? data : withOpts(idAlternates, data))
-  const writeBackFile = file_data =>
-    fs.outputFileSync(path.join(text_dir, file_data.name), file_data.final_html)
-  const writeEachFile = data => R.forEach(writeBackFile, data)
   const outputData = data =>
     fs.outputJson(
       path.join(text_dir, `.percival/data-${new Date().toISOString()}.json`),
@@ -175,8 +224,7 @@ module.exports.main = (
     tagExplicit,
     tagParenUnary,
     tagOrphanUnary,
-    findAltsUnary,
-    writeEachFile
+    findAltsUnary
   )
 
   const all_data = runPercy(files, text_dir, opts)
