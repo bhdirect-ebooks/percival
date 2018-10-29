@@ -1,6 +1,6 @@
 {
   "name": "@bhdirect/percival",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Bible ref tagger for B&H Direct EPUBs",
   "main": "index.js",
   "repository": "github.com/bhdirect/percival",
@@ -13,11 +13,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "nyc ava"
-  },
-  "devDependencies": {
-    "ava": "^0.25.0",
-    "nyc": "^11.4.1"
+    "test": "jest"
   },
   "dependencies": {
     "@bhdirect/betterify": "latest",
@@ -45,5 +41,8 @@
     "recursive-iterator": "^3.3.0",
     "reversify": "^1.1.0",
     "single-line-log": "^1.1.2"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
   }
 }
