@@ -144,7 +144,11 @@ Raven.context(function() {
       .filter(file => file.endsWith('.xhtml'))
       .filter(
         file =>
-          !/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(
+          // allow tagging of scripture within footnotes
+          /*!/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(
+            file
+          )*/
+          !/_(?:index|titlepage|bibliography|cover|copyright-page)/.test(
             file
           )
       )
