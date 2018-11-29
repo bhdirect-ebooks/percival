@@ -144,7 +144,11 @@ Raven.context(function() {
       .filter(file => file.endsWith('.xhtml'))
       .filter(
         file =>
-          !/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(
+          // allow tagging of scripture within footnotes
+          /*!/_(?:index|titlepage|bibliography|cover|copyright-page|footnotes)/.test(
+            file
+          )*/
+          !/_(?:index|titlepage|bibliography|cover|copyright-page)/.test(
             file
           )
       )
@@ -222,6 +226,7 @@ Raven.context(function() {
           .replace(/(data-ref="[^"]*?")(?: id="([^"]+)")?/g, '$1')
           .replace(/<(?:hr|span) data-parsing="[^"]*?" ?\/>/g, '')
           .replace(/<span data-parsing=[^>]+>([^<]*?)<\/span>/g, '$1')
+          .replace(/(href=")epub\/([^\/"#.]+\.xhtml#[^"]+") target="_blank"/g, '$1$2')
   }
   const getNewHtml = (orig_html, percy_html, regex) =>
     orig_html.replace(regex, (match, cg1, cg2) => cg1.concat(percy_html, cg2))
