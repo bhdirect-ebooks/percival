@@ -223,9 +223,10 @@ Raven.context(function() {
     return !remove_data
       ? html
       : html
-          .replace(/(data-ref="[^"]*?")(?: id="([^"]+)")?/g, '$1')
+          .replace(/(data-ref(?:="[^"]*?")?)(?: id="([^"]+)")?/g, '$1')
           .replace(/<(?:hr|span) data-parsing="[^"]*?" ?\/>/g, '')
           .replace(/<span data-parsing=[^>]+>([^<]*?)<\/span>/g, '$1')
+          // revert internal links that were modified for the UI
           .replace(/(href=")epub\/([^\/"#.]+\.xhtml#[^"]+") target="_blank"/g, '$1$2')
   }
   const getNewHtml = (orig_html, percy_html, regex) =>
