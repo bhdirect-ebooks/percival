@@ -226,6 +226,7 @@ Raven.context(function() {
           .replace(/(data-ref(?:="[^"]*?")?)(?: id="([^"]+)")?/g, '$1')
           .replace(/<(?:hr|span) data-parsing="[^"]*?" ?\/>/g, '')
           .replace(/<span data-parsing=[^>]+>([^<]*?)<\/span>/g, '$1')
+          .replace(/(<img[^>]*?)alt ([^>]*>)/g, '$1alt=""$2')
           // revert internal links that were modified for the UI
           .replace(/(href=")epub\/([^\/"#.]+\.xhtml#[^"]+") target="_blank"/g, '$1$2')
   }
