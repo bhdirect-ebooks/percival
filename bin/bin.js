@@ -226,11 +226,25 @@ Raven.context(function() {
           .replace(/(data-ref(?:="[^"]*?")?)(?: id="([^"]+)")?/g, '$1')
           .replace(/<(?:hr|span) data-parsing="[^"]*?" ?\/>/g, '')
           .replace(/<span data-parsing=[^>]+>([^<]*?)<\/span>/g, '$1')
+          .replace(/(<img[^>]*?)alt ([^>]*>)/g, '$1alt=""$2')
           // revert internal links that were modified for the UI
           .replace(/(href=")epub\/([^\/"#.]+\.xhtml#[^"]+") target="_blank"/g, '$1$2')
   }
-  const getNewHtml = (orig_html, percy_html, regex) =>
-    orig_html.replace(regex, (match, cg1, cg2) => cg1.concat(percy_html, cg2))
+  const getNewHtml = (orig_html, percy_html, regex, file_name) =>
+    orig_html
+      .replace(regex, (match, cg1, cg2) => cg1.concat(percy_html, cg2))
+      // footer tags were stripped out on initial file reading, so they need to be re-inserted, but not in footnotes files (they don't have footers)
+      .replace(/^ *<div[^>\n]*epub:type="footnote"/m, match => {
+        return file_name.includes("footnotes")
+          ? match
+          : `      <footer epub:type="footnotes">\n${match}`
+      })
+      .replace(/(<div[^>\n]*epub:type="footnote"[^>\n]*>\s*<p>.*?<\/p>\s*<\/div>\n?)(\s*(?:<\/section>|<\/body>))/, (match, cg1, cg2) => {
+        return file_name.includes("footnotes")
+          ? match
+          : `${cg1}      </footer>\n${cg2}`
+      });
+
   const runPercival = dir => {
     const text_dir = path.join(dir, 'OEBPS', 'text')
     const rc_loc = path.join(dir, 'META-INF', 'crossrc.json')
@@ -289,8 +303,8 @@ Raven.context(function() {
           const body_sect_regex = /(<body[^>]*?>\s+<(?:section|div)[^>]*?>)[\s\S]+(<\/(?:section|div)>\s+<\/body>)/
           const body_regex = /(<body[^>]*?>)[\s\S]+(<\/body>)/
           const new_html = body_sect_regex.test(src_html)
-            ? getNewHtml(src_html, percy_html, body_sect_regex)
-            : getNewHtml(src_html, percy_html, body_regex)
+            ? getNewHtml(src_html, percy_html, body_sect_regex, file)
+            : getNewHtml(src_html, percy_html, body_regex, file)
           const new_json = toJSON(new_html)
           fs.outputFileSync(
             path.join(text_dir, file),
