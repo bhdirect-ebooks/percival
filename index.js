@@ -54,7 +54,7 @@ const initFileDataObj = (file, data, final_html) => {
 }
 
 // readFileUtf8 :: String -> String
-const readFileUtf8 = filepath => fs.readFileSync(filepath, { encoding: 'utf8' })
+const readFileUtf8 = filepath => fs.readFileSync(filepath, { encoding: 'utf8' }).replace(/^ *<\/?footer[^>]*>\n/gm, '') // remove footer tags
 
 // tagExplicit :: ([String], String, {k: v}) -> [Object]
 const tagExplicit = (files, text_dir, opts) => {
