@@ -16,7 +16,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@bhdirect/betterify": "../LifeWayMacStuff/__scripts_bhdirect/betterify",
+    "@bhdirect/betterify": "latest",
     "bible-passage-reference-parser": "^2.0.1",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
