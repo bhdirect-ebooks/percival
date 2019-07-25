@@ -1,72 +1,179 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>percival</title>
+    <link href="static/img/favicon.png" rel="icon" />
+    <link href="static/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="static/css/simple-line-icons.css" rel="stylesheet" />
+    <link href="static/css/coreui.css" rel="stylesheet" />
+    <link href="static/css/mywsb-dev-percy.css" rel="stylesheet" />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>percival</title>
-  <link href="static/img/favicon.png" rel="icon">
-  <link href="static/css/font-awesome.min.css" rel="stylesheet">
-  <link href="static/css/simple-line-icons.css" rel="stylesheet">
-  <link href="static/css/coreui.css" rel="stylesheet">
-  <link href="static/css/mywsb-dev-percy.css" rel="stylesheet">
-</head>
+  <body class="app aside-menu-fixed">
+    <div id="app"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js"></script>
+    <script src="app.js"></script>
+    <script>
+      const app = Elm.Main.embed(document.getElementById('app'));
 
-<body class="app aside-menu-fixed">
-  <div id="app"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js"></script>
-  <script src="app.js"></script>
-  <script>
-    const app = Elm.Main.embed(document.getElementById('app'))
+      /*
+       * Scrolling
+       */
 
-    let prev_id = ''
+      let prev_id = '';
 
-    const elementIsInViewport = el => {
-      var rect = el.getBoundingClientRect();
-      return (
-        rect.top >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-      )
-    }
+      const elementIsInViewport = el => {
+        var rect = el.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight)
+        );
+      };
 
-    const scrollMyDiv = (id, contain_id, pad, block_id) => {
-      const el = document.getElementById(id)
-      const proceed = contain_id === 'title-doc'
-        ? (prev_id !== block_id || elementIsInViewport(el))
-        : true
-      if (el !== null) {
-        const div = document.getElementById(contain_id)
-        const bottom_bit = div.scrollHeight - div.offsetHeight
-        requestAnimationFrame(() => {
-          el.scrollIntoView(true)
-          if (div.scrollTop < bottom_bit) {
-            div.scrollTop -= pad
+      const scrollMyDiv = (id, contain_id, pad, block_id) => {
+        const el = document.getElementById(id);
+        const proceed =
+          contain_id === 'title-doc'
+            ? prev_id !== block_id || elementIsInViewport(el)
+            : true;
+        if (el !== null) {
+          const div = document.getElementById(contain_id);
+          const bottom_bit = div.scrollHeight - div.offsetHeight;
+          requestAnimationFrame(() => {
+            el.scrollIntoView(true);
+            if (div.scrollTop < bottom_bit) {
+              div.scrollTop -= pad;
+            }
+          });
+        }
+      };
+
+      app.ports.scrollList.subscribe(id => {
+        scrollMyDiv(id, 'scripture-list', 70);
+      });
+
+      app.ports.scrollDoc.subscribe(id => {
+        const block_id = id
+          .split('-')
+          .slice(0, 4)
+          .join('-');
+        scrollMyDiv(id, 'title-doc', 300, block_id);
+        prev_id = block_id;
+      });
+
+      app.ports.backtoTop.subscribe(yes => {
+        if (yes) {
+          selectedRefs.clear();
+          app.ports.multiSelect.send([]);
+          document.getElementById('title-doc').scrollTop = 0;
+          document.getElementById('scripture-list').scrollTop = 0;
+        }
+      });
+
+      /*
+       * Ref click/selection
+       */
+
+      let cmdCtrlPressed = false;
+      const keyCodes = ['MetaLeft', 'MetaRight', 'OSLeft', 'OSRight'];
+      const selectedRefs = new Set([]);
+
+      document.addEventListener('keydown', ev => {
+        if (keyCodes.includes(ev.code)) cmdCtrlPressed = true;
+      });
+
+      document.addEventListener('keyup', ev => {
+        if (keyCodes.includes(ev.code)) cmdCtrlPressed = false;
+      });
+
+      const handleMultiSelect = id => {
+        if (selectedRefs.has(id)) {
+          selectedRefs.delete(id);
+        } else {
+          selectedRefs.add(id);
+        }
+        app.ports.multiSelect.send([...selectedRefs]);
+      };
+
+      const reportRefId = id => {
+        if (cmdCtrlPressed) {
+          handleMultiSelect(id);
+        } else {
+          selectedRefs.clear();
+          app.ports.multiSelect.send([id]);
+          selectedRefs.add(id);
+        }
+      };
+
+      app.ports.clearSelected.subscribe(yes => {
+        if (yes) selectedRefs.clear();
+      });
+
+      /*
+       * Text selection
+       */
+
+      const clearTextSelected = () => {
+        app.ports.textSelected.send({
+          blockId: '',
+          selectedText: '',
+          anchorOffset: 0,
+          focusOffset: 0,
+          textContent: '',
+        });
+      };
+
+      const sendTextSelection = selected => {
+        const { anchorOffset, focusOffset, anchorNode } = selected;
+        const blocks = document.querySelectorAll('.blocks');
+        const [selectedBlock] = [...blocks].filter(el =>
+          el.contains(anchorNode)
+        );
+
+        app.ports.textSelected.send({
+          blockId: selectedBlock.id,
+          selectedText: selected.toString(),
+          anchorOffset,
+          focusOffset,
+          textContent: anchorNode.textContent,
+        });
+      };
+
+      const verifyTextSelection = selected => {
+        const { anchorOffset, focusOffset, anchorNode, focusNode } = selected;
+
+        // ensure Text Node; type 3 == Text
+        if (anchorNode && anchorNode.nodeType === 3) {
+          if (
+            anchorNode === focusNode && // ensure single Node; anchor==beginning, focus==end
+            anchorOffset !== focusOffset // ensure content; same offset == empty string
+          ) {
+            selectedRefs.clear();
+            app.ports.multiSelect.send([]);
+            sendTextSelection(selected);
           }
-        })
-      }
-    }
 
-    app.ports.scrollList.subscribe(id => {
-      scrollMyDiv(id, 'scripture-list', 70)
-    })
+          if (anchorOffset === focusOffset) {
+            clearTextSelected();
+          }
+        }
+      };
 
-    app.ports.scrollDoc.subscribe(id => {
-      const block_id = id.split('-').slice(0, 4).join('-')
-      scrollMyDiv(id, 'title-doc', 300, block_id)
-      prev_id = block_id
-    })
+      app.ports.trySelection.subscribe(yes => {
+        if (yes) {
+          const selected = window.getSelection();
+          verifyTextSelection(selected);
+        }
+      });
 
-    app.ports.backtoTop.subscribe(yes => {
-      if (yes) {
-        document.getElementById('title-doc').scrollTop = 0
-        document.getElementById('scripture-list').scrollTop = 0
-      }
-    })
-
-    const reportRefId = id => {
-      app.ports.clickedRef.send(id)
-    }
-  </script>
-</body>
-
+      app.ports.deselect.subscribe(yes => {
+        if (yes) {
+          window.getSelection().empty();
+        }
+      });
+    </script>
+  </body>
 </html>
