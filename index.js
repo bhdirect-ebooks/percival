@@ -122,8 +122,6 @@ const remoteContextRun = R.curry((run, opts, file_data) => {
     toJSON(file_data.final_html),
     'context',
     opts,
-    log,
-    file_data.name
   )
 
   const final_html =
