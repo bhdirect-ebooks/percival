@@ -1,6 +1,6 @@
 {
   "name": "@bhdirect/percival",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Bible ref tagger for B&H Direct EPUBs",
   "main": "index.js",
   "repository": "github.com/bhdirect/percival",
@@ -16,7 +16,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@bhdirect/betterify": "/Users/westonlit/Downloads/betterify",
+    "@bhdirect/betterify": "latest",
     "bible-passage-reference-parser": "^2.0.1",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
